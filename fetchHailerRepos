@@ -1,0 +1,35 @@
+#!/bin/sh
+
+HAILER_PATH="$HOME/hailer"
+FRONT="$HAILER_PATH/front"
+API="$HAILER_PATH/api"
+DOCKER="$HAILER_PATH/docker"
+ADMIN_API="$HAILER_PATH/admin-api"
+ADMIN_FRONT="$HAILER_PATH/admin-front"
+
+echo "Creating folders"
+echo "	$FRONT"
+mkdir -p "$FRONT"
+echo "	$API"
+mkdir -p "$API"
+echo "	$DOCKER"
+mkdir -p "$DOCKER"
+echo "	$ADMIN_API"
+mkdir -p "$ADMIN_API"
+echo "	$ADMIN_FRONT"
+mkdir -p "$ADMIN_FRONT"
+
+echo ""
+
+echo "Cloning hailer-front-2"
+git clone -q git@bitbucket.org:hailer/hailer-frontend-2.git $FRONT
+echo "Cloning hailer-api"
+git clone -q git@bitbucket.org:hailer/hailer-api.git $API
+echo "Cloning hailer-docker"
+git clone -q git@bitbucket.org:hailer/hailer-docker.git $DOCKER
+echo "Cloning admin-api"
+git clone -q git@bitbucket.org:hailer/hailer-admin-api.git $ADMIN_API
+echo "Cloning admin-front"
+git clone -q git@bitbucket.org:hailer/hailer-admin-front.git $ADMIN_FRONT
+
+echo "Done"
