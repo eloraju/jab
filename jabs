@@ -1,9 +1,19 @@
 #!/bin/sh
-###### JABS - Juusos Arch Bootstrap Script ######
+### JABS - Juusos Arch Bootstrap Script
+### Order of operations
+# 1. Enable multilib
+# 1. Run pacman -S
+# 2. Generate user 
+# 3. Do some config stuff
+# 4. Pull config files down
+# 5. Install yay and yay packages
+# 6. Pull wallpapers & scripts
+# 7. Pull work stuff
 
 USERNAME=$1
 PROG=0
 MAX=10
+
 error() {
     clear; printf "\\n\\nError: %s\\n\\n" "$1"; exit;
 }
@@ -21,7 +31,7 @@ enablePacmanMultilib() {
 
 # Installs all the packages I need for work and leisure
 installPacmanPackages() {
-    pacman -S --noconfirm $(cat ./pacman-pkgs)
+    pacman -S --noconfirm $(grep -vE '^#|^$' ./pacman-pkgs)
 }
 
 # Create a new user. This is the only param provided for the whole program 🤷
@@ -38,11 +48,6 @@ generateSSHKeys() {
     ssh-keygen -P '' -f $UHOME/.ssh/gl >> /dev/null
 }
 
-# Copy the config template
-copyNetworkConfig() {
-   cp templates/20-wired.network /etc/systemd/network/20-wired.network 
-}
-
 # Throw in the keyboard config
 copyKeyboardConfig() {
     cp templates/00-keyboard.conf /etc/X11/xorg.conf.d/00-keyboard.conf
@@ -50,8 +55,7 @@ copyKeyboardConfig() {
 
 # Enable and start all kinds of services
 enableServices() {
-    systemctl enable docker systemd-networkd systemd-resolved lightdm
-    systemctl start docker systemd-networkd systemd-resolved lightdm
+    systemctl enable --now docker systemd-networkd systemd-resolved lightdm
 }
 
 # Pull stuff
@@ -63,18 +67,9 @@ installYayAndPackages() {
     cd yay
     sudo -u $1 makepkg -si
     # Check that yay is working
-    # '(yay -Q >> /dev/null && yay -S) || error yay didn't install correctly'
+    # '(yay -Q >> /dev/null && yay -S $(grep -vE '^#|^$'./yay-pkgs)) || error yay didn't install correctly'
 }
 
 
 
 
-##### Order of operations
-# 1. Enable multilib
-# 1. Run pacman -S
-# 2. Generate user 
-# 3. Edit required config files (networkd/X11-keyboard)
-# 4. Pull config files down
-# 5. Install yay and yay packages
-# 6. Pull wallpapers & scripts
-# 7. Pull work stuff

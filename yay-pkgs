@@ -1,3 +1,5 @@
 robo3t-bin
 brave-bin
 
+#Fix for dwm, st and dmenu. Shows color emojis
+libxft-bgra
