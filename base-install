@@ -8,12 +8,25 @@ locale-gen
 echo "LANG=en_GB.UTF-8" > /etc/locale.conf
 echo "KEYMAP=fi" > /etc/vconsole.conf
 
+# TODO: Parametrizise hostname :)
 echo "asgard" > /etc/hostname
 
-echo >> EOF
+echo "\
 127.0.0.1	localhost
-::1		localhost
-127.0.1.1	myhostname.localdomain	myhostname
-EOF
-> /etc/hosts
+::1		    localhost
+127.0.1.1	asgard.localdomain	asgrad"
+>> /etc/hosts
+
+cp ./templates/20-wired.network /etc/systemd/network/
+
+systemctl enable systemd-networkd
+systemctl enable systemd-resolved
+
+useradd -m -p root -G wheel juuso
+
+pacman -S grub
+
+# TODO: change this to be an efi install
+grub-install --target=i386-pc /dev/vda
+grub-mkconfig -o /boot/grub/grub.cfg
 
