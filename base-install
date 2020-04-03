@@ -5,6 +5,8 @@ sed -iE 's/^#fi_FI.U/fi_FI.U/' /etc/locale.gen
 sed -iE 's/^#en_GB.U/en_GB.U/' /etc/locale.gen
 locale-gen
 
+curl https://www.archlinux.org/mirrorlist/?country=FI&country=DE&country=SE&protocol=http&protocol=https&ip_version=4 | sed 's/#Server/Server/' > /etc/pacman.d/mirrorlist
+
 echo "LANG=en_GB.UTF-8" > /etc/locale.conf
 echo "KEYMAP=fi" > /etc/vconsole.conf
 
@@ -14,8 +16,7 @@ echo "asgard" > /etc/hostname
 echo "\
 127.0.0.1	localhost
 ::1		    localhost
-127.0.1.1	asgard.localdomain	asgrad"
->> /etc/hosts
+127.0.1.1	asgard.localdomain	asgrad" > /etc/hosts
 
 cp ./templates/20-wired.network /etc/systemd/network/
 
@@ -24,9 +25,11 @@ systemctl enable systemd-resolved
 
 useradd -m -p root -G wheel juuso
 
-pacman -S grub
+pacman -S --noconfirm grub 
 
 # TODO: change this to be an efi install
 grub-install --target=i386-pc /dev/vda
 grub-mkconfig -o /boot/grub/grub.cfg
 
+echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
+echo "%wheel ALL=(ALL) NOPASSWD: /usr/bin/shutdown,/usr/bin/reboot,/usr/bin/systemctl suspend,/usr/bin/mount,/usr/bin/umount,/usr/bin/pacman -Syu,/usr/bin/pacman -Syyu,/usr/bin/systemctl restart NetworkManager,/usr/bin/pacman -Syyu --noconfirm,/usr/bin/loadkeys,/usr/bin/yay,/usr/bin/pacman -Syyuw --noconfirm" >> /etc/sudoers

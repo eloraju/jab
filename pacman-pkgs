@@ -49,6 +49,7 @@ libpng
 libpulse
 libva
 libxcomposite
+libxft-bgra
 libxinerama
 libxslt
 lightdm
