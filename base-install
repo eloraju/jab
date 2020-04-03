@@ -5,7 +5,7 @@ sed -iE 's/^#fi_FI.U/fi_FI.U/' /etc/locale.gen
 sed -iE 's/^#en_GB.U/en_GB.U/' /etc/locale.gen
 locale-gen
 
-curl https://www.archlinux.org/mirrorlist/?country=FI&country=DE&country=SE&protocol=http&protocol=https&ip_version=4 | sed 's/#Server/Server/' > /etc/pacman.d/mirrorlist
+curl https://www.archlinux.org/mirrorlist/?country=FI | sed 's/#Ser/Ser/' >> /etc/pacman.d/mirrorlist
 
 echo "LANG=en_GB.UTF-8" > /etc/locale.conf
 echo "KEYMAP=fi" > /etc/vconsole.conf
