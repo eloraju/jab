@@ -1,0 +1,5 @@
+ln -sf /usr/share/zoneinfo/Europe/Helsinki /etc/localtime
+hwclock --systohc
+sed -iE 's/^#fi_FI.U/fi_FI.U/' /etc/locale.gen
+sed -iE 's/^#en_GB.U/en_GB.U/' /etc/locale.gen
+
