@@ -18,7 +18,7 @@ echo "\
 ::1		    localhost
 127.0.1.1	asgard.localdomain	asgrad" > /etc/hosts
 
-cp ./templates/20-wired.network /etc/systemd/network/
+curl https://gitlab.com/eloraju/jab/-/raw/master/templates/20-wired.network -o /etc/systemd/network/20-wired.network
 
 systemctl enable systemd-networkd
 systemctl enable systemd-resolved
