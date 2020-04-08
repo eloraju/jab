@@ -1,35 +1,79 @@
-ln -sf /usr/share/zoneinfo/Europe/Helsinki /etc/localtime
-hwclock --systohc
+#!/bin/zsh
 
-sed -iE 's/^#fi_FI.U/fi_FI.U/' /etc/locale.gen
-sed -iE 's/^#en_GB.U/en_GB.U/' /etc/locale.gen
-locale-gen
+askPartition() {
+    SWAPON=y
+    HOMEPART=y
+    read -q "SWAPON?Create partition for swap? (y/N)"
+    read -q "HOMEPART?Create partition for '/home'? (y/N)"
 
-curl https://www.archlinux.org/mirrorlist/?country=FI | sed 's/#Ser/Ser/' >> /etc/pacman.d/mirrorlist
+    case $SWAPON in
+        y|Y)
+            echo "Creating swap...";
+            ;;
+        n|N)
+            echo "Skipping swap partition"
+            ;;
+        *)
+            echo "Invalid input. Interperating as NO";
+            ;;
+    esac
 
-echo "LANG=en_GB.UTF-8" > /etc/locale.conf
-echo "KEYMAP=fi" > /etc/vconsole.conf
+    case $HOMEPART in
+        y|Y)
+            echo "Creating home partitions...";
+            ;;
+        n|N)
+            echo "Skipping home partition"
+            ;;
+        *)
+            echo "Invalid input. Interperating as NO";
+            ;;
+    esac
+}
 
-# TODO: Parametrizise hostname :)
-echo "asgard" > /etc/hostname
+createPartition() {
 
-echo "\
-127.0.0.1	localhost
-::1		    localhost
-127.0.1.1	asgard.localdomain	asgrad" > /etc/hosts
+}
 
-curl https://gitlab.com/eloraju/jab/-/raw/master/templates/20-wired.network -o /etc/systemd/network/20-wired.network
+parittionDisk() {
+    EFI=$(ls /sys/firmware/efi/efivars | wc -l)
+}
 
-systemctl enable systemd-networkd
-systemctl enable systemd-resolved
+printDisks() {
+    lsblk | cut -d " " -f1 | egrep '^nvme|^sd|^hd|^vd'
+}
 
-useradd -m -p root -G wheel juuso
+diskCount() {
+    printDisks | wc -l
+}
 
-pacman -S --noconfirm grub 
+askForDisk() {
+    echo "\nSelect a disk for patitioning"
+    printDisks | awk '{print NR, ")", $0}'
+    read "DSEL?(0-$(diskCount)): "
 
-# TODO: change this to be an efi install
-grub-install --target=i386-pc /dev/vda
-grub-mkconfig -o /boot/grub/grub.cfg
+    [ "$DSEL" -lt "$(diskCount)" ] || (echo "Invalid selection '$DSEL'."; askForDisk;)
 
-echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
-echo "%wheel ALL=(ALL) NOPASSWD: /usr/bin/shutdown,/usr/bin/reboot,/usr/bin/systemctl suspend,/usr/bin/mount,/usr/bin/umount,/usr/bin/pacman -Syu,/usr/bin/pacman -Syyu,/usr/bin/systemctl restart NetworkManager,/usr/bin/pacman -Syyu --noconfirm,/usr/bin/loadkeys,/usr/bin/yay,/usr/bin/pacman -Syyuw --noconfirm" >> /etc/sudoers
+    read -q "OKTOGO?$DSEL is about to be nuked. Are you ok with this? (y/N): ";
+
+    case $OKTOGO in 
+        y|Y)
+            echo "You can Ctrl+C your way out before you answer to partition questions."
+            askPartition
+            ;;
+        n|N)
+            ;;
+        *)
+            ;;
+    
+}
+
+selectDisk() {
+    echo ""
+    DSEL=$(selectDisk)
+    echo $(printDisks) | cut -d " " -f$DSEL
+}
+
+#loadkeys fi
+#timedatectl set-ntp true
+

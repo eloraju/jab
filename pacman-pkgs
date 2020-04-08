@@ -1,6 +1,8 @@
 alsa-lib
 alsa-plugins
 alsa-utils
+arch-wiki-docs
+arch-wiki-lite
 curl
 docker
 docker-compose
@@ -49,12 +51,11 @@ libpng
 libpulse
 libva
 libxcomposite
-libxft-bgra
 libxinerama
 libxslt
 lightdm
 lightdm-webkit2-greeter
-ligthdm-webkit-theme-aether
+lightdm-webkit-theme-litarvan
 mlocate
 mpg123
 ncurses

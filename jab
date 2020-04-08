@@ -14,7 +14,9 @@ USERNAME=$1
 
 # Enables multilib (for steam 'n stuff)
 enablePacmanMultilib() {
-    sed -i "/\[multilib\]/, /Include/"'s/^#//' /etc/pacman.conf
+   sed -i "/\[multilib\]/, /Include/"'s/^#//' /etc/pacman.conf
+   # And add some bling to pacman :)
+   sed '/#Verbose/a ILoveCandy\nColor' pacman.conf
 }
 
 # Installs all the packages I need for work and leisure
