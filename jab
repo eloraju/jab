@@ -19,10 +19,6 @@ enablePacmanMultilib() {
    sed '/#Verbose/a ILoveCandy\nColor' pacman.conf
 }
 
-# Installs all the packages I need for work and leisure
-installPacmanPackages() {
-    pacman -S --noconfirm $(grep -vE '^#|^$' ./pacman-pkgs)
-}
 
 # Create a new user. This is the only param provided for the whole program 🤷
 #generateUser() {
@@ -34,8 +30,7 @@ installPacmanPackages() {
 generateSSHKeys() {
     [ -d $HOME/.ssh ] || mkdir $HOME/.ssh
     cp ./templates/ssh.config $HOME/.ssh/config
-    ssh-keygen -P '' -f $HOME/.ssh/bb >> /dev/null
-    ssh-keygen -P '' -f $HOME/.ssh/gl >> /dev/null
+    ssh-keygen
 }
 
 # Throw in the keyboard config
@@ -45,7 +40,7 @@ copyKeyboardConfig() {
 
 # Enable and start all kinds of services
 enableServices() {
-    systemctl enable --now docker systemd-networkd systemd-resolved lightdm
+    systemctl enable --now docker systemd-networkd systemd-resolved
 }
 
 # Pull stuff
@@ -61,11 +56,10 @@ installYayAndPackages() {
 }
 
 enablePacmanMultilib
-installPacmanPackages
+installYayAndPackages
 generateSSHKeys
 copyKeyboardConfig
 enableServices
-installYayAndPackages
 
 
 
