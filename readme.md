@@ -60,9 +60,7 @@ ls /sys/firmware/efi/efivars
 
 ### Partitioning
 
-#### Disk preparation
-
-##### Find the disk you want to use
+#### Find the disk you want to use
 
 First we need to identify the disk we want to use. I'll use `sda` as the exmple drive.
 
@@ -71,13 +69,9 @@ lsblk
 
 # output
 NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
-sda           8:16   0 111.8G  0 disk
-└─sda1        8:17   0 111.8G  0 part
-sdb           8:0    0   3.7T  0 disk
-├─sdb1        8:1    0    16M  0 part
-└─sdb2        8:2    0   3.7T  0 part
-sdc           8:32   0 232.9G  0 disk
-└─sdc1        8:33   0 232.9G  0 part
+sda           8:16   0 100.0G  0 disk
+└─sda1        8:17   0 50.0G  0 part
+└─sda2        8:17   0 50.0G  0 part
 nvme0n1     259:0    0 232.9G  0 disk
 ├─nvme0n1p1 259:1    0   512M  0 part /boot
 ├─nvme0n1p2 259:2    0  32.4G  0 part [SWAP]
@@ -85,41 +79,82 @@ nvme0n1     259:0    0 232.9G  0 disk
 └─nvme0n1p4 259:4    0   170G  0 part /home
 ```
 
-##### EFI Partition schemas
+#### Partitioning schemas
 
-Three most common partition schemas listed below. I usually go with just a swap
-and no home part.
+I've listed most some of the more common partitioning schemas for EFI and
+BIOS systems.
 
-###### Basic EFI partiton
+TODO: ADD SIZE EXAMPLES UP HERE
 
-| Partition | Mount point | Partition type | File system | Size   |
-|-----------|-------------|----------------|-------------|--------|
-| /dev/sda1 | /mnt/boot   | EFI            | FAT32       | ~512mb |
-| /dev/sda2 | /mnt        | Linux          | EXT4        |        |
+##### Basic EFI partiton
 
-###### EFI system with swap, no home part
+| Partition | Mount point | Partition type | File system |
+|-----------|-------------|----------------|-------------|
+| /dev/sda1 | /mnt/boot   | EFI            | FAT32       |
+| /dev/sda2 | /mnt        | Linux          | EXT4        |
 
-| Partition | Mount point | Partition type | File system | Size   |
-|-----------|-------------|----------------|-------------|--------|
-| /dev/sda1 | /mnt/boot   | EFI            | FAT32       | ~512mb |
-| /dev/sda2 | /mnt        | Linux          | EXT4        |        |
-| /dev/sda3 | -           | Swap           | Swap        |        |
+##### EFI system with swap, no home part
 
-###### EFI system with swap and home part
+| Partition | Mount point | Partition type | File system |
+|-----------|-------------|----------------|-------------|
+| /dev/sda1 | /mnt/boot   | EFI            | FAT32       |
+| /dev/sda2 | /mnt        | Linux          | EXT4        |
+| /dev/sda3 | -           | Swap           | Swap        |
 
-| Partition | Mount point | Partition type | File system | Size    |
-|-----------|-------------|----------------|-------------|---------|
-| /dev/sda1 | /mnt/boot   | EFI            | FAT32       | ~ 512mb |
-| /dev/sda2 | /mnt        | Linux          | EXT4        |         |
-| /dev/sda3 | /mnt/home   | Linux          | EXT4        |         |
-| /dev/sda4 | -           | Swap           | Swap        |         |
+##### EFI system with swap and home part
+
+| Partition | Mount point | Partition type | File system |
+|-----------|-------------|----------------|-------------|
+| /dev/sda1 | /mnt/boot   | EFI            | FAT32       |
+| /dev/sda2 | /mnt        | Linux          | EXT4        |
+| /dev/sda3 | /mnt/home   | Linux          | EXT4        |
+| /dev/sda4 | -           | Swap           | Swap        |
+
+##### BIOS with MBR and swap
+
+| Partition | Mount point | Partition type    | File system |
+|-----------|-------------|-------------------|-------------|
+| /dev/sda1 | /           | Linux<sup>1</sup> | EXT4        |
+| /dev/sda3 | -           | Swap              | SWAP        |
+
+  1. This needs to be marked as bootable with the partition tool of your choice.
+
+##### BIOS with GPT and swap
+
+| Partition | Mount point | Partition type      | File system |
+|-----------|-------------|---------------------|-------------|
+| /dev/sda1 | -           | BIOS boot partition |             |
+| /dev/sda3 | /           | Linux               | EXT4        |
+| /dev/sda4 | -           | Swap                | SWAP        |
 
 #### Creating the partitions
 
-You can use `fdisk`, `cfdisk` or `parted` on the defailt Arch installation medium
-to create the partitions. Consult the tables above.
+You can use [`fdisk`](#using-fdisk), [`cfdisk`](#using-cfdisk),
+[`sfdisk`](#using-sfdisk) or [`parted`](#using-parted) on the default Arch
+installation medium to create the partitions. Consult the tables above
+if you're unsure how you should partition your drive. We'll use
+imagenary 100GB `/dev/sda` as an exmple drive and create three partitions
+for it. One for `/boot` one for `root` and one for `swap`.
 
-##### TODO: Creating variables for partitions (for scripts)
+All of the programs listed below will go trough the same motions.
+
+1. Remove existing partitions
+2. Create new partitions
+3. Write the partitions
+
+For the sake of not repeating the motion again and again I will just
+
+##### Using `fdisk`
+
+Run `fdisk  /dev/sda` to select the drive for partitioning. You can press
+`m` for help to read up on what you can do or you can just read the most relevant
+commands here:
+
+- `d` to delete existing partition
+- `n` to add a new partition
+- `w` to write the partition table
+
+##### Using `cfdisk`
 
 ##### Using `sfdisk`
 
@@ -133,19 +168,19 @@ to create the partitions. Consult the tables above.
 
 sfdisk $SELECTED_DISK <<EOF
 # 512M EFI boot partition
-,512M, ef
+,512M,ef
 # 3G Swap partition
-,3G, 82
+,3G,82
 # Rest of the disk for root partition
-,, 83
+,,83
 EOF
 ```
 
 Here we create three partitions for disk `/dev/sda`:
 
-- 512M EFI boot partition
-- 3G Swap partition
-- 6.5G root partition
+- 512M EFI boot partition type EFI
+- 3G Swap partition type Linux Swap
+- 6.5G root partition type Linux
 
 ```sh
 sda         259:0    0    10G  0 disk
@@ -153,3 +188,5 @@ sda         259:0    0    10G  0 disk
 ├─/dev/sda2 259:2    0     3G  0
 ├─/dev/sda3 259:3    0   6.5G  0
 ```
+
+##### TODO: Creating variables for partitions (for scripts)
