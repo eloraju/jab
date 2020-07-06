@@ -1,0 +1,25 @@
+curl
+docker
+docker-compose
+dunst
+firefox
+git
+neovim
+openssh
+pavucontrol
+picom
+reflector
+scrot
+shuffle
+sxiv
+xclip
+xorg-server
+xorg-xrandr
+xorg-xinit
+xorg-xsetroot
+zsh
+# yay
+robo3t-bin
+
+#Fix for dwm, st and dmenu. Shows color emojis
+libxft-bgra
