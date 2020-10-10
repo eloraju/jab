@@ -5,9 +5,6 @@
 Nothing too special. Just another install/bootstrap script for Arch. It's going
 to change according to my likings any given time.
 
-I'm going to have trhee section down below. First an simple install guide
-followed by a copy-pasta script dump and then an explanation for the scripts.
-
 ### Disclaimer
 
 I've done this for mainly my own use so if you follow along and something goes sideways
