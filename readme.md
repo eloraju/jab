@@ -1,5 +1,8 @@
 # JAB - Juusos Arch Bootsrapper
 
+Yyyyeah. I've been writing this readme instead of creating the scripts. Soooo...
+Don't care about the scripts.
+
 ## Preface
 
 Nothing too special. Just another install/bootstrap script for Arch. It's going
