@@ -23,13 +23,13 @@ Just some basic stuff we need to get out of the way before we start
 
 #### Load in your keyboard layout
 
-```sh
+```shell
 loadkeys fi
 ```
 
 #### Check for internet connection with a ping
 
-```sh
+```shell
 ping archlinux.org
 ```
 
@@ -39,7 +39,7 @@ Not on wifi? You be f*cked son.
 
 #### Make sure system clock is in sync
 
-```sh
+```shell
 timedatectl set-ntp true
 ```
 
@@ -47,13 +47,13 @@ timedatectl set-ntp true
 
 Check whether you're running a legacy BIOS or EFI.
 
-```sh
+```shell
 # Running this will tell you if you're running EFI or not
 (ls /sys/firmware/efi/efivars 1>/dev/null 2>&1 && echo Running EFI) ||
 echo Running legacy BIOS
 ```
 
-```sh
+```shell
 # This will print out the conents of /sys/firmware/efi/efivars
 # If the output is not an error, you're running EFI
 ls /sys/firmware/efi/efivars
@@ -65,7 +65,7 @@ ls /sys/firmware/efi/efivars
 
 First we need to identify the disk we want to use. I'll use `sda` as the exmple drive.
 
-```sh
+```shell
 lsblk
 
 # output
@@ -169,7 +169,7 @@ general gist is the same.
 
 Example of `fdisk` commands.
 
-```sh
+```shell
 # select the disk to partition
 fdisk /dev/sda
 # delete old partitions
@@ -199,7 +199,7 @@ Command (m for help): w<cr>
 If you're installing a `BIOS` system with `MBR` table you'll also need to mark
 the root partition bootable.
 
-```sh
+```shell
 #in fdisk
 Command (m for help): a <cr>
 Partition number (1-n, default n): 1<cr>
@@ -240,7 +240,7 @@ Here we add a new `GPT` partition talbe to `/dev/sda` create three partitions:
  Start from the first free sector
  Mark the next 3G to be a new partition of type S (swap)
 
-```sh
+```shell
 sfdisk /dev/sda -X gpt<<EOF
 # 512M EFI boot partition
 ,512M,U
@@ -251,7 +251,7 @@ sfdisk /dev/sda -X gpt<<EOF
 EOF
 ```
 
-```sh
+```shell
 lsblk
 sda         259:0    0   100G  0 disk
 ├─/dev/sda1 259:1    0   512M  0
@@ -263,7 +263,7 @@ sda         259:0    0   100G  0 disk
 
 I'll use the partitions created in the `sfdisk` example.
 
-```sh
+```shell
 # Create a fat32 filesystem for the boot partition
 mkfs.fat -F32 /dev/sda1
 # ext4 goodness
@@ -275,7 +275,7 @@ swapon /dev/sda2
 
 ### Mount the drives
 
-```sh
+```shell
 mount /dev/sda3 /mnt
 # create mount point for the boot folder/efi
 mkdir /mnt/boot
@@ -287,7 +287,7 @@ You can use your favourite text editor to move the mirrors physically closest to
 you at the top the file at `/etc/pacman.d/mirrorlist` or you can use this little
 snippet to move certain lines to the top
 
-```sh
+```shell
 # Finland is the closest to me so I'll use that
 MATCH=Finland
 LIST=/etc/pacman.d/mirrorlist
