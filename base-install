@@ -20,33 +20,33 @@ function checkInternet() {
 function formatEfi() {
     partNum=1
     echo "Formatting $jab_drive"
-    sfdisk --delete /dev/sda #1>/dev/null 2>&1
+    sfdisk --delete /dev/sda 1>/dev/null #2>&1
     # Create boot partition
     echo "Creating boot partition"
-    echo ',512M,U' | sfdisk $jab_drive -X gpt #1>/dev/null 2>&1
-    mkfs.fat -F32 /dev/sda1 #1>/dev/null 2>&1
+    echo ',512M,U' | sfdisk $jab_drive -X gpt 1>/dev/null #2>&1
+    mkfs.fat -F32 /dev/sda1 1>/dev/null #2>&1
     ((partNum=partNum+1))
 
     # Check and create swap partition
     if [[ $jab_swap -eq 0 ]]; then
         echo "Creating swap partition"
-        echo ", $jab_swap_s, S" | sfdisk $jab_drive -a #1>/dev/null 2>&1
-        mkswap "/dev/sda$partNum" #1>/dev/null 2>&1
-        swapon "/dev/sda$partNum" #1>/dev/null 2>&1
+        echo ", $jab_swap_s, S" | sfdisk $jab_drive -a 1>/dev/null #2>&1
+        mkswap "/dev/sda$partNum" 1>/dev/null #2>&1
+        swapon "/dev/sda$partNum" 1>/dev/null #2>&1
         ((partNum=partNum+1))
     fi
 
     # Check and create root partition
     if [[ $jab_home_part -eq 0 ]]; then
         "Creating home partition"
-        echo ",$jab_root_s,L" | sfdisk $jab_drive -a #1>/dev/null 2>&1
-        mkfs.ext4 "/dev/sda$partNum" #1>/dev/null 2>&1
+        echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null #2>&1
+        mkfs.ext4 "/dev/sda$partNum" 1>/dev/null #2>&1
         ((partNum=partNum+1))
     fi
 
     echo "Creating root partition"
-    echo ",,L" | sfdisk $jab_drive -a #1>/dev/null 2>&1
-    mkfs.ext4 "/dev/sda$partNum" #1>/dev/null 2>&1
+    echo ",,L" | sfdisk $jab_drive -a 1>/dev/null #2>&1
+    mkfs.ext4 "/dev/sda$partNum" 1>/dev/null #2>&1
 }
 
 function formatBios() {
