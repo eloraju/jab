@@ -22,27 +22,31 @@ function formatEfi() {
     echo "Formatting $jab_drive"
 
     # Create boot partition
-    echo ',512M,U' | sfdisk $jab_drive -X gpt
-    mkfs.fat -F32 /dev/sda1
+    echo "Creating boot partition"
+    echo ',512M,U' | sfdisk $jab_drive -X gpt 1>/dev/null 2>&1
+    mkfs.fat -F32 /dev/sda1 1>/dev/null 2>&1
     ((partNum=partNum+1))
 
     # Check and create swap partition
     if [[ $jab_swap -eq 0 ]]; then
-        echo ", $jab_swap_s, S" | sfdisk $jab_drive -a
-        mkswap "/dev/sda$partNum"
-        swapon "/dev/sda$partNum"
+        echo "Creating swap partition"
+        echo ", $jab_swap_s, S" | sfdisk $jab_drive -a 1>/dev/null 2>&1
+        mkswap "/dev/sda$partNum" 1>/dev/null 2>&1
+        swapon "/dev/sda$partNum" 1>/dev/null 2>&1
         ((partNum=partNum+1))
     fi
 
     # Check and create root partition
     if [[ $jab_home_part -eq 0 ]]; then
-        echo ",$jab_root_s,L" | sfdisk $jab_drive -a
-        mkfs.ext4 "/dev/sda$partNum"
+        "Creating home partition"
+        echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
+        mkfs.ext4 "/dev/sda$partNum" 1>/dev/null 2>&1
         ((partNum=partNum+1))
     fi
 
-    echo ",,L" | sfdisk $jab_drive -a
-    mkfs.ext4 "/dev/sda$partNum"
+    echo "Creating root partition"
+    echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
+    mkfs.ext4 "/dev/sda$partNum" 1>/dev/null 2>&1
 }
 
 function formatBios() {
