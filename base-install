@@ -16,15 +16,33 @@ function checkInternet() {
     echo 0
 }
 
+# Create partitions
 function formatEfi() {
-sfdisk $jab_drive -X gpt<<EOF
-# 512M EFI boot partition
-,512M,U
-# 10G Swap partition
-,10G,S
-# Rest of the disk for root partition
-,,L
-EOF
+    partNum=1
+    echo "Formatting $jab_drive"
+
+    # Create boot partition
+    echo ',512M,U' | sfdisk $jab_drive -X gpt
+    mkfs.fat -F32 /dev/sda1
+    ((partNum=partNum+1))
+
+    # Check and create swap partition
+    if [[ $jab_swap -eq 0 ]]; then
+        echo ", $jab_swap_s, S" | sfdisk $jab_drive -a
+        mkswap "/dev/sda$partNum"
+        swapon "/dev/sda$partNum"
+        ((partNum=partNum+1))
+    fi
+
+    # Check and create root partition
+    if [[ $jab_home_part -eq 0 ]]; then
+        echo ",$jab_root_s,L" | sfdisk $jab_drive -a
+        mkfs.ext4 "/dev/sda$partNum"
+        ((partNum=partNum+1))
+    fi
+
+    echo ",,L" | sfdisk $jab_drive -a
+    mkfs.ext4 "/dev/sda$partNum"
 }
 
 function formatBios() {
@@ -41,10 +59,10 @@ function main() {
     if [[ -f $conf_file ]]; then source $conf_file; fi
     
     [[ -z $jab_drive ]] && export jab_drive="/dev/sda"
-    [[ -z $jab_swap ]] && export jab_swap=0
-    [[ -z $jab_swap_s ]] && export jab_swap_s=16G
+    [[ -z $jab_swap ]] && export jab_swap=1
+    [[ -z $jab_swap_s ]] && export jab_swap_s=4G
     [[ -z $jab_home_part ]] && export jab_home_part=1
-    [[ -z $jab_home_s ]] && export jab_home_s=0
+    [[ -z $jab_root_s ]] && export jab_root_s=40G
     [[ -z $jab_efi ]] && export jab_efi=$(checkEfi)
     [[ -z $jab_online ]] && export jab_online=$(checkInternet)
 
