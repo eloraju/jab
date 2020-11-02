@@ -22,11 +22,10 @@ function formatEfi() {
     echo "    Formatting $jab_drive"
 
     previousSwap=$(swapon -s | awk -F' ' '/\/dev/ {print $1}')
-
     if [[ -n $previousSwap ]]; then
         swapoff $previousSwap
     fi
-
+    
     sfdisk --delete /dev/sda 1>/dev/null 2>&1
     # Create boot partition
     echo "    Creating boot partition"
