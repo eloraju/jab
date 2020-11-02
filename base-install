@@ -23,7 +23,7 @@ function formatEfi() {
 
     previousSwap=$(swapon -s | awk -F' ' '/\dev/ {print $1}')
 
-    if [[ -n $previousSwap]]; then
+    if [[ -n $previousSwap ]]; then
         swapoff $previousSwap
     fi
 
