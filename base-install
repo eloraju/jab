@@ -21,7 +21,7 @@ function formatEfi() {
     partNum=1
     echo "    Formatting $jab_drive"
 
-    previousSwap=$(swapon -s | awk -F' ' '/\dev/ {print $1}')
+    previousSwap=$(swapon -s | awk -F' ' '/\/dev/ {print $1}')
 
     if [[ -n $previousSwap ]]; then
         swapoff $previousSwap
