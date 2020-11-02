@@ -64,6 +64,14 @@ function formatBios() {
     echo "BIOS implementation not completed yet"
 }
 
+function updateMirrors() {
+    echo "Installing helper tools"
+    pacman -Syq reflector --noconfirm 1>/dev/null
+    echo "    Setting mirrors. This might take a couple of minutes..."
+    reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+    echo "    Mirros ready"
+}
+
 function main() {
     #loadkeys fi
     #timedatectl set-ntp true
@@ -92,7 +100,7 @@ function main() {
         exit 2
     fi
 
-    pacman -Sy reflector --noconfirm
+    updateMirrors
 
 }
 
