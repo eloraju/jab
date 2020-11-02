@@ -47,8 +47,8 @@ function formatEfi() {
     mkfs.ext4 "/dev/sda$partNum" 1>/dev/null #2>&1
 
     if [[ $jab_swap -eq 0 ]]; then
-        mkswap "/dev/sda$partNum" 1>/dev/null #2>&1
-        swapon "/dev/sda$partNum" 1>/dev/null #2>&1
+        mkswap "/dev/sda2" 1>/dev/null #2>&1
+        swapon "/dev/sda2" 1>/dev/null #2>&1
     fi
 }
 
