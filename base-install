@@ -31,7 +31,7 @@ function formatEfi() {
     # Create boot partition
     echo "    Creating boot partition"
     echo ',512M,U' | sfdisk $jab_drive -w always -X gpt 1>/dev/null 2>&1
-    mkfs.fat -n BOOT -F32 /dev/sda1 1>/dev/null 2>&1
+    mkfs.fat -F32 -n BOOT /dev/sda1 1>/dev/null 2>&1
     ((partNum=partNum+1))
 
     # Check and create swap partition
@@ -75,6 +75,23 @@ function updateMirrors() {
     echo "    Mirros ready"
 }
 
+function mountPartitions() {
+    echo "Mounting partitions"
+    echo "    Mounting root"
+    if [[ $jab_home_part -eq 0 ]]; then
+        mount /dev/disk/by-label/ROOT /mnt
+        echo "    Mounting home"
+        mkdir /mnt/home
+        mount /dev/disk/by-label/HOME /mnt/home
+    else
+        mount /dev/disk/by-label/HOME /mnt
+    fi
+
+    echo "    Mounting boot"
+    mkdir /mnt/boot
+    mount /dev/disk/by-label/BOOT /mnt/boot
+}
+
 function main() {
     #loadkeys fi
     #timedatectl set-ntp true
@@ -104,8 +121,7 @@ function main() {
     fi
 
     updateMirrors
-    
-    basePkgs=(base base-devel )
+    mountPartitions
 }
 
 main $@
