@@ -25,7 +25,7 @@ function formatEfi() {
     if [[ -n $previousSwap ]]; then
         swapoff $previousSwap
     fi
-    
+
     sfdisk --delete /dev/sda 1>/dev/null 2>&1
     # Create boot partition
     echo "    Creating boot partition"
@@ -59,6 +59,7 @@ function formatEfi() {
     fi
 
     # Create all directories and mount the partitions
+    mountPartitions
 }
 
 function formatBios() {
@@ -120,7 +121,6 @@ function main() {
     fi
 
     updateMirrors
-    mountPartitions
 }
 
 main $@
