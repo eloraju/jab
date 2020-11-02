@@ -36,8 +36,8 @@ function formatEfi() {
 
     # Check and create swap partition
     if [[ $jab_swap -eq 0 ]]; then
-        echo "Creating swap partition"
-        echo ", $jab_swap_s, S" | sfdisk $jab_drive -a 1>/dev/null #2>&1
+        echo "    Creating swap partition"
+        echo ", $jab_swap_s, S" | sfdisk $jab_drive -a --force 1>/dev/null #2>&1
         ((partNum=partNum+1))
     fi
 
