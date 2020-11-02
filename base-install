@@ -43,20 +43,24 @@ function formatEfi() {
 
     # Check and create root partition
     if [[ $jab_home_part -eq 0 ]]; then
-        "    Creating home partition"
+        "    Creating root partition"
         echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
-        mkfs.ext4 "/dev/sda$partNum" 1>/dev/null 2>&1
+        mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
         ((partNum=partNum+1))
     fi
 
-    echo "    Creating root partition"
+    echo "    Creating home partition"
     echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
-    mkfs.ext4 "/dev/sda$partNum" 1>/dev/null 2>&1
+    mkfs.ext4 -L HOME "$jab_drive$partNum" 1>/dev/null 2>&1
+    homePart=$jab_drive$partNum
 
     if [[ $jab_swap -eq 0 ]]; then
-        mkswap "/dev/sda2" 1>/dev/null 2>&1
+        mkswap -L SWAP "/dev/sda2" 1>/dev/null 2>&1
         swapon "/dev/sda2" 1>/dev/null 2>&1
     fi
+
+    # Create all directories and mount the partitions
+    lsblk
 }
 
 function formatBios() {
@@ -101,7 +105,8 @@ function main() {
     fi
 
     updateMirrors
-
+    
+    basePkgs=(base base-devel )
 }
 
 main $@
