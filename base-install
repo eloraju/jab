@@ -68,9 +68,7 @@ function main() {
     #loadkeys fi
     #timedatectl set-ntp true
     
-    conf_file=$(realpath $1)
-
-    if [[ -f $conf_file ]]; then source $conf_file; fi
+    if [[ -f $1 ]]; then source $1; fi
     
     [[ -z $jab_drive ]] && export jab_drive="/dev/sda"
     [[ -z $jab_swap ]] && export jab_swap=1
