@@ -69,7 +69,7 @@ function formatBios() {
 
 function updateMirrors() {
     echo "Installing helper tools"
-    pacman -Syq reflector --noconfirm 1>/dev/null
+    pacman -Syq reflector --noconfirm 1>/dev/null 2>&1
     echo "    Setting mirrors. This might take a couple of minutes..."
     reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
     echo "    Mirros ready"
