@@ -19,10 +19,10 @@ function checkInternet() {
 # Create partitions
 function formatEfi() {
     partNum=1
-    echo "Formatting $jab_drive"
+    echo "\t\tFormatting $jab_drive"
     sfdisk --delete /dev/sda 1>/dev/null #2>&1
     # Create boot partition
-    echo "Creating boot partition"
+    echo "\t\tCreating boot partition"
     echo ',512M,U' | sfdisk $jab_drive -X gpt 1>/dev/null #2>&1
     mkfs.fat -F32 /dev/sda1 1>/dev/null #2>&1
     ((partNum=partNum+1))
@@ -36,13 +36,13 @@ function formatEfi() {
 
     # Check and create root partition
     if [[ $jab_home_part -eq 0 ]]; then
-        "Creating home partition"
+        "\t\tCreating home partition"
         echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null #2>&1
         mkfs.ext4 "/dev/sda$partNum" 1>/dev/null #2>&1
         ((partNum=partNum+1))
     fi
 
-    echo "Creating root partition"
+    echo "\t\tCreating root partition"
     echo ",,L" | sfdisk $jab_drive -a 1>/dev/null #2>&1
     mkfs.ext4 "/dev/sda$partNum" 1>/dev/null #2>&1
 
