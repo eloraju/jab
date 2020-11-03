@@ -105,6 +105,7 @@ function main() {
     [[ -z $jab_root_s ]] && export jab_root_s=40G
     [[ -z $jab_efi ]] && export jab_efi=$(checkEfi)
     [[ -z $jab_online ]] && export jab_online=$(checkInternet)
+    [[ -z $jab_version ]] && export jab_version="arch"
 
     echo "Checking for internet connection..."
     if [[ ! jab_online ]]; then
@@ -121,6 +122,12 @@ function main() {
     fi
 
     updateMirrors
+
+    if [[ $jab_version == "arch" ]];then
+        installArch
+    elif [[ $jab_version == "artix"]]; then
+        echo "Not implemented"
+    fi
 }
 
 main $@
