@@ -34,14 +34,14 @@ function formatEfi() {
     ((partNum=partNum+1))
 
     # Check and create swap partition
-    if [[ $jab_swap -eq 0 ]]; then
+    if $jab_swap; then
         echo "    Creating swap partition"
         echo ", $jab_swap_s, S" | sfdisk $jab_drive -a 1>/dev/null 2>&1
         ((partNum=partNum+1))
     fi
 
     # Check and create root partition
-    if [[ $jab_home_part -eq 0 ]]; then
+    if $jab_home_part; then
         "    Creating root partition"
         echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
         mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
@@ -53,7 +53,7 @@ function formatEfi() {
     mkfs.ext4 -L HOME "$jab_drive$partNum" 1>/dev/null 2>&1
     homePart=$jab_drive$partNum
 
-    if [[ $jab_swap -eq 0 ]]; then
+    if $jab_swap -eq 0; then
         mkswap -L SWAP "/dev/sda2" 1>/dev/null 2>&1
         swapon "/dev/sda2" 1>/dev/null 2>&1
     fi
@@ -78,7 +78,7 @@ function updateMirrors() {
 function mountPartitions() {
     echo "Mounting partitions"
     echo "    Mounting root"
-    if [[ $jab_home_part -eq 0 ]]; then
+    if $jab_home_part; then
         mount /dev/disk/by-label/ROOT /mnt
         echo "    Mounting home"
         mkdir /mnt/home
