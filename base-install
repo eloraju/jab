@@ -92,6 +92,10 @@ function mountPartitions() {
     mount /dev/disk/by-label/BOOT /mnt/boot
 }
 
+function installArch() {
+    echo 'Here we need the packages'
+}
+
 function main() {
     #loadkeys fi
     #timedatectl set-ntp true
