@@ -123,9 +123,9 @@ function main() {
 
     updateMirrors
 
-    if [[ $jab_version == "arch" ]];then
+    if [[ $jab_version == "arch" ]]; then
         installArch
-    elif [[ $jab_version == "artix"]]; then
+    elif [[ $jab_version == "artix" ]]; then
         echo "Not implemented"
     fi
 }
