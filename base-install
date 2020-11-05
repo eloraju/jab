@@ -103,7 +103,8 @@ function mountPartitions() {
 }
 
 function installArch() {
-    echo 'Here we need the packages'
+    echo "Installing base system"
+    pacstrap /mnt base base-devel git curl neovim zsh 
 }
 
 function main() {
