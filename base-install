@@ -26,7 +26,7 @@ function formatEfi() {
         swapoff $previousSwap
     fi
 
-    wipefs $jab_drive
+    wipefs $jab_drive 1>/dev/null 2>&1
     #sfdisk --delete $jab_drive 1>/dev/null 2>&1
     # Create boot partition
     echo "    Creating boot partition"
@@ -80,6 +80,7 @@ function updateMirrors() {
 }
 
 function mountPartitions() {
+    sleep 1
     echo "Mounting partitions"
     echo "    Mounting root"
     mount /dev/disk/by-label/ROOT /mnt
