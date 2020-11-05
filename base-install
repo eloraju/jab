@@ -80,7 +80,8 @@ function updateMirrors() {
 }
 
 function mountPartitions() {
-    echo "Waiting for partiotions to settle"
+    # TODO: Problems during testing --> The partitions might be mounted from previous attempt...
+    # Not a feasable situtation in real life though...
     sleep 3
     echo "Mounting partitions"
     echo "    Mounting root"
@@ -135,12 +136,7 @@ function main() {
     updateMirrors
 
     echo "Installing base system"
-
-    if [[ $jab_version == "arch" ]]; then
-        pacstrap /mnt base base-devel linux linux-firmware git curl neovim zsh 
-    elif [[ $jab_version == "artix" ]]; then
-        echo "Not implemented"
-    fi
+    pacstrap /mnt base base-devel linux linux-firmware git curl neovim zsh 
 }
 
 main $@
