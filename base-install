@@ -71,17 +71,12 @@ function formatBios() {
     echo "BIOS implementation not completed yet"
 }
 
-function updateMirrors() {
-    echo "Installing helper tools"
-    pacman -Syq reflector --noconfirm 1>/dev/null 2>&1
-    echo "    Setting mirrors. This might take a couple of minutes..."
-    reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-    echo "    Mirros ready"
-}
-
 function mountPartitions() {
     # TODO: Problems during testing --> The partitions might be mounted from previous attempt...
     # Not a feasable situtation in real life though...
+    # For some reason there has to be a small delay before
+    # mounting the drives. Otherwise they won't be visible
+    # in /dev/disk/by-label. Go figure 🤷
     sleep 3
     echo "Mounting partitions"
     echo "    Mounting root"
@@ -103,6 +98,20 @@ function mountPartitions() {
     fi
 }
 
+function updateMirrors() {
+    echo "Installing helper tools"
+    pacman -Syq reflector --noconfirm 1>/dev/null 2>&1
+    echo "    Setting mirrors. This might take a couple of minutes..."
+    reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+    echo "    Mirros ready"
+}
+
+function installArch() {
+    echo "Installing base system"
+    pacstrap /mnt base base-devel linux linux-firmware git curl neovim zsh networkmanager
+    genfstab -U /mnt >> /mnt/etc/fstab
+}
+
 function main() {
     #loadkeys fi
     #timedatectl set-ntp true
@@ -117,15 +126,19 @@ function main() {
     [ -z $jab_efi ] && export jab_efi=$(checkEfi)
     [ -z $jab_online ] && export jab_online=$(checkInternet)
     [ -z $jab_version ] && export jab_version="arch"
+    
+    # Configs for the 
+    [ -z $jab_locale ] && export jab_locale="en_GB.UTF-8"
+    [ -z $jab_tz ] && export jab_tz="Europe/Helsinki"
+    [ -z $jab_keyboard ] && export jab_keyboard="fi"
+    [ -z $jab_hostname ] && export jab_hostname="arch"
+    
 
     echo "Checking for internet connection..."
-    if [[ ! jab_online ]]; then
-        echo "No internet connection. Aborting."
+    if [ $jab_online -ne 0 ]; then
         exit 1
     fi
 
-    echo "Partitioning drive"
-    formatEfi
     #if [[ $jab_efi -eq 0 ]]; then
     #    formatEfi
     #else
@@ -133,10 +146,9 @@ function main() {
     #    exit 2
     #fi
 
+    formatEfi
     updateMirrors
-
-    echo "Installing base system"
-    pacstrap /mnt base base-devel linux linux-firmware git curl neovim zsh 
+    installArch
 }
 
 main $@
