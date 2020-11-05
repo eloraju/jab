@@ -38,7 +38,7 @@ function formatEfi() {
     if [ $jab_swap ]; then
         echo "    Creating swap partition"
         echo ", $jab_swap_s, S" | sfdisk $jab_drive -a 1>/dev/null 2>&1
-        mkswap -L SWAP "/dev/sda2" 1>/dev/null 2>&1
+        mkswap -L SWAP $jab_drive"2" 1>/dev/null 2>&1
         ((partNum=partNum+1))
     fi
 
