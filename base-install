@@ -46,18 +46,18 @@ function formatEfi() {
     if [ $jab_home_part -eq 0 ]; then
         echo "    Creating root partition"
         echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
-        mkfs.ext4 -L ROOT -F "$jab_drive$partNum" 1>/dev/null 2>&1
+        yes | mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
         ((partNum=partNum+1))
 
         echo "    Creating home partition"
         echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
-        mkfs.ext4 -L HOME -F "$jab_drive$partNum" 1>/dev/null 2>&1
+        yes | mkfs.ext4 -L HOME "$jab_drive$partNum" 1>/dev/null 2>&1
         homePart=$jab_drive$partNum
 
     else
         echo "    Creating root partition"
         echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
-        mkfs.ext4 -L ROOT -F "$jab_drive$partNum" 1>/dev/null 2>&1
+        yes | mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
         homePart=$jab_drive$partNum
     fi
 
