@@ -80,7 +80,8 @@ function updateMirrors() {
 }
 
 function mountPartitions() {
-    sleep 1
+    echo "Waiting for partiotions to settle"
+    sleep 3
     echo "Mounting partitions"
     echo "    Mounting root"
     mount /dev/disk/by-label/ROOT /mnt
