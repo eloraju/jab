@@ -35,7 +35,7 @@ function formatEfi() {
     ((partNum=partNum+1))
 
     # Check and create swap partition
-    if [ $jab_swap ]; then
+    if [ $jab_swap -eq 0 ]; then
         echo "    Creating swap partition"
         echo ", $jab_swap_s, S" | sfdisk $jab_drive -a 1>/dev/null 2>&1
         mkswap -L SWAP $jab_drive"2" 1>/dev/null 2>&1
@@ -43,7 +43,7 @@ function formatEfi() {
     fi
 
     # Check and create root partition
-    if [ $jab_home_part ]; then
+    if [ $jab_home_part -eq 0 ]; then
         echo "    Creating root partition"
         echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
         mkfs.ext4 -L ROOT -F "$jab_drive$partNum" 1>/dev/null 2>&1
@@ -110,14 +110,14 @@ function main() {
     
     if [[ -f $1 ]]; then source $1; fi
     
-    [[ -z $jab_drive ]] && export jab_drive="/dev/sda"
-    [[ -z $jab_swap ]] && export jab_swap=0
-    [[ -z $jab_swap_s ]] && export jab_swap_s=4G
-    [[ -z $jab_home_part ]] && export jab_home_part=1
-    [[ -z $jab_root_s ]] && export jab_root_s=40G
-    [[ -z $jab_efi ]] && export jab_efi=$(checkEfi)
-    [[ -z $jab_online ]] && export jab_online=$(checkInternet)
-    [[ -z $jab_version ]] && export jab_version="arch"
+    [ -z $jab_drive ] && export jab_drive="/dev/sda"
+    [ -z $jab_swap ] && export jab_swap=0
+    [ -z $jab_swap_s ] && export jab_swap_s=4G
+    [ -z $jab_home_part ] && export jab_home_part=1
+    [ -z $jab_root_s ] && export jab_root_s=40G
+    [ -z $jab_efi ] && export jab_efi=$(checkEfi)
+    [ -z $jab_online ] && export jab_online=$(checkInternet)
+    [ -z $jab_version ] && export jab_version="arch"
 
     echo "Checking for internet connection..."
     if [[ ! jab_online ]]; then
@@ -126,7 +126,7 @@ function main() {
     fi
 
     echo "Partitioning drive"
-    if [[ jab_efi ]]; then
+    if [ jab_efi -eq 0 ]; then
         formatEfi
     else
         formatBios
