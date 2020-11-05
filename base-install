@@ -102,9 +102,6 @@ function mountPartitions() {
     fi
 }
 
-function installArch() {
-}
-
 function main() {
     #loadkeys fi
     #timedatectl set-ntp true
