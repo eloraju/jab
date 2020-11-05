@@ -90,12 +90,12 @@ function mountPartitions() {
     mkdir /mnt/boot
     mount /dev/disk/by-label/BOOT /mnt/boot
 
-    if [ $jab_swap ]; then
+    if [ $jab_swap -eq 0 ]; then
         echo "    Turning swap on"
         swapon /dev/disk/by-label/SWAP 1>/dev/null 2>&1
     fi
 
-    if [ $jab_home_part ]; then
+    if [ $jab_home_part -eq 0 ]; then
         echo "    Mounting home"
         mkdir /mnt/home
         mount /dev/disk/by-label/HOME /mnt/home
