@@ -37,6 +37,7 @@ function formatEfi() {
     if [ $jab_swap ]; then
         echo "    Creating swap partition"
         echo ", $jab_swap_s, S" | sfdisk $jab_drive -a 1>/dev/null 2>&1
+        mkswap -L SWAP "/dev/sda2" 1>/dev/null 2>&1
         ((partNum=partNum+1))
     fi
 
@@ -46,17 +47,19 @@ function formatEfi() {
         echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
         mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
         ((partNum=partNum+1))
+
+        echo "    Creating home partition"
+        echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
+        mkfs.ext4 -L HOME "$jab_drive$partNum" 1>/dev/null 2>&1
+        homePart=$jab_drive$partNum
+
+    else
+        echo "    Creating root partition"
+        echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
+        mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
+        homePart=$jab_drive$partNum
     fi
 
-    echo "    Creating home partition"
-    echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
-    mkfs.ext4 -L HOME "$jab_drive$partNum" 1>/dev/null 2>&1
-    homePart=$jab_drive$partNum
-
-    if [ $jab_swap ]; then
-        mkswap -L SWAP "/dev/sda2" 1>/dev/null 2>&1
-        swapon "/dev/sda2" 1>/dev/null 2>&1
-    fi
 
     # Create all directories and mount the partitions
     mountPartitions
@@ -78,18 +81,22 @@ function updateMirrors() {
 function mountPartitions() {
     echo "Mounting partitions"
     echo "    Mounting root"
-    if [ $jab_home_part ]; then
-        mount /dev/disk/by-label/ROOT /mnt
-        echo "    Mounting home"
-        mkdir /mnt/home
-        mount /dev/disk/by-label/HOME /mnt/home
-    else
-        mount /dev/disk/by-label/HOME /mnt
-    fi
+    mount /dev/disk/by-label/ROOT /mnt
 
     echo "    Mounting boot"
     mkdir /mnt/boot
     mount /dev/disk/by-label/BOOT /mnt/boot
+
+    if [ $jab_swap ]; then
+        echo "    Turning swap on"
+        swapon /dev/disk/by-label/SWAP 1>/dev/null 2>&1
+    fi
+
+    if [ $jab_home_part ]; then
+        echo "    Mounting home"
+        mkdir /mnt/home
+        mount /dev/disk/by-label/HOME /mnt/home
+    fi
 }
 
 function installArch() {
