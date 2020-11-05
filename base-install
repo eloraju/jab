@@ -137,7 +137,7 @@ function main() {
     #    exit 2
     #fi
 
-    #updateMirrors
+    updateMirrors
 
     if [[ $jab_version == "arch" ]]; then
         installArch
