@@ -1,33 +1,23 @@
-# JAB - Juusos Arch Bootsrapper
-
-## Preface
-
-Nothing too special. Just another install/bootstrap script for Arch. It's going
-to change according to my likings any given time.
-
-I'm going to have trhee section down below. First an simple install guide
-followed by a copy-pasta script dump and then an explanation for the scripts.
-
-### Disclaimer
+**JAB - Juusos Arch Bootsrapper**
 
 I've done this for mainly my own use so if you follow along and something goes sideways
 you'll have to balme yourself.
 
-## Install guide
+# Install guide
 
 Boot into the live environment and start installing
 
-### Initial setup
+## Initial setup
 
 Just some basic stuff we need to get out of the way before we start
 
-#### Load in your keyboard layout
+### Load in your keyboard layout
 
 ```sh
 loadkeys fi
 ```
 
-#### Check for internet connection with a ping
+### Check for internet connection with a ping
 
 ```sh
 ping archlinux.org
@@ -37,20 +27,19 @@ No response?
 If you're on wifi then follow the [wifi instructions](#copy-pasta-installation)
 Not on wifi? You be f*cked son.
 
-#### Make sure system clock is in sync
+### Make sure system clock is in sync
 
 ```sh
 timedatectl set-ntp true
 ```
 
-#### Check for EFI
+### Check for EFI
 
 Check whether you're running a legacy BIOS or EFI.
 
 ```sh
 # Running this will tell you if you're running EFI or not
-(ls /sys/firmware/efi/efivars 1>/dev/null 2>&1 && echo Running EFI) ||
-echo Running legacy BIOS
+(ls /sys/firmware/efi/efivars 1>/dev/null 2>&1 && echo Running EFI) || echo Running legacy BIOS
 ```
 
 ```sh
@@ -59,16 +48,16 @@ echo Running legacy BIOS
 ls /sys/firmware/efi/efivars
 ```
 
-### Partitioning
+## Partitioning
 
-#### Find the disk you want to use
+### Find the disk you want to use
 
 First we need to identify the disk we want to use. I'll use `sda` as the exmple drive.
 
 ```sh
 lsblk
 
-# output
+ output
 NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 sda           8:16   0 100.0G  0 disk
 └─sda1        8:17   0 50.0G  0 part
@@ -80,21 +69,21 @@ nvme0n1     259:0    0 232.9G  0 disk
 └─nvme0n1p4 259:4    0   170G  0 part /home
 ```
 
-#### Partition table types and choosing a schema
+### Partition table types and choosing a schema
 
 I've listed most some of the more common partitioning schemas for EFI and
 BIOS systems.
 
-#### Partitioning schemas
+### Partitioning schemas
 
-##### Basic EFI partiton
+#### Basic EFI partiton
 
 | Partition | Mount point | Partition type | File system |
 |-----------|-------------|----------------|-------------|
 | /dev/sda1 | /mnt/boot   | EFI            | FAT32       |
 | /dev/sda2 | /mnt        | Linux          | EXT4        |
 
-##### EFI system with swap, no home part
+#### EFI system with swap, no home part
 
 | Partition | Mount point | Partition type | File system |
 |-----------|-------------|----------------|-------------|
@@ -102,7 +91,7 @@ BIOS systems.
 | /dev/sda2 | /mnt        | Linux          | EXT4        |
 | /dev/sda3 | -           | Swap           | Swap        |
 
-##### EFI system with swap and home part
+#### EFI system with swap and home part
 
 | Partition | Mount point | Partition type | File system |
 |-----------|-------------|----------------|-------------|
@@ -111,7 +100,7 @@ BIOS systems.
 | /dev/sda3 | /mnt/home   | Linux          | EXT4        |
 | /dev/sda4 | -           | Swap           | Swap        |
 
-##### BIOS with MBR and swap
+#### BIOS with MBR and swap
 
 | Partition | Mount point | Partition type | File system |
 |-----------|-------------|----------------|-------------|
@@ -120,7 +109,7 @@ BIOS systems.
 
   1. This needs to be marked as bootable with the partition tool of your choice.
 
-##### BIOS with GPT and swap
+#### BIOS with GPT and swap
 
 | Partition | Mount point | Partition type | File system |
 |-----------|-------------|----------------|-------------|
@@ -128,7 +117,7 @@ BIOS systems.
 | /dev/sda3 | /           | Linux          | EXT4        |
 | /dev/sda4 | -           | Swap           | SWAP        |
 
-#### Creating the partitions
+### Creating the partitions
 
 You can use [`fdisk`](#using-fdisk), [`cfdisk`](#using-cfdisk)
 or [`sfdisk`](#using-sfdisk) on the default Arch installation medium to create
@@ -150,7 +139,7 @@ a partition table for the disk. If so just pick
 | GPT | 1          | 20               | 19         | 4         |
 | MBR | -          | 83               | 82         | -         |
 
-##### Using `fdisk`
+#### Using `fdisk`
 
 Run `fdisk  /dev/sda` to select the drive for partitioning. You can press
 `m` for help to read up on what you can do or you can just read the most relevant
@@ -200,12 +189,12 @@ If you're installing a `BIOS` system with `MBR` table you'll also need to mark
 the root partition bootable.
 
 ```sh
-#in fdisk
+# in fdisk
 Command (m for help): a <cr>
 Partition number (1-n, default n): 1<cr>
 ```
 
-##### Using `sfdisk`
+#### Using `sfdisk`
 
 In my opinion `sfdisk` is the simplest to use. When you know what you're doing.
 This is also the program used with the installer script.
@@ -227,7 +216,7 @@ Here we add a new `GPT` partition talbe to `/dev/sda` create three partitions:
   - The same as with `fdisk` but no need to supply the +
 - type
   - Can be supplied as a single letter and `sfdisk` will convert it
-  to a regocnisable value for the partition table
+  to a recognisable value for the partition table
     - L = Linux filesystem
     - S = Linux Swap
     - U = EFI system
@@ -259,7 +248,7 @@ sda         259:0    0   100G  0 disk
 ├─/dev/sda3 259:3    0  89.5G  0
 ```
 
-#### Adding filesystems to the partitions
+### Adding filesystems to the partitions
 
 I'll use the partitions created in the `sfdisk` example.
 
@@ -273,7 +262,7 @@ mkswap /dev/sda2
 swapon /dev/sda2
 ```
 
-### Mount the drives
+## Mount the drives
 
 ```sh
 mount /dev/sda3 /mnt
@@ -282,7 +271,7 @@ mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
 ```
 
-### Set pacman mirrors
+## Set pacman mirrors
 You can use your favourite text editor to move the mirrors physically closest to
 you at the top the file at `/etc/pacman.d/mirrorlist` or you can use this little
 snippet to move certain lines to the top
@@ -295,4 +284,4 @@ LIST=/etc/pacman.d/mirrorlist
 cp /tmp/list $LIST
 ```
 
-##### TODO: Creating variables for partitions (for scripts)
+#### TODO: Creating variables for partitions (for scripts)

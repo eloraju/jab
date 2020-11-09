@@ -19,9 +19,6 @@ xorg-xrandr
 xorg-xinit
 xorg-xsetroot
 zsh
-
-# yay
-robo3t-bin
-
-#Fix for dwm, st and dmenu. Shows color emojis
-libxft-bgra
+virt-manager
+libvirt
+qemu

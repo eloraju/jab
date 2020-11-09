@@ -26,17 +26,6 @@ enablePacmanMultilib() {
 #    UHOME=/home/$1
 #}
 
-# Generates ssh-keys for my work and personal repos
-generateSSHKeys() {
-    [ -d $HOME/.ssh ] || mkdir $HOME/.ssh
-    cp ./templates/ssh.config $HOME/.ssh/config
-    ssh-keygen
-}
-
-# Throw in the keyboard config
-copyKeyboardConfig() {
-    cp templates/00-keyboard.conf /etc/X11/xorg.conf.d/00-keyboard.conf
-}
 
 # Enable and start all kinds of services
 enableServices() {
@@ -55,11 +44,6 @@ installYayAndPackages() {
     (yay -Q >> /dev/null && yay -S $(grep -vE '^#|^$'./yay-pkgs)) || error "yay didn't install correctly"
 }
 
-enablePacmanMultilib
-installYayAndPackages
-generateSSHKeys
-copyKeyboardConfig
-enableServices
 
 
 
