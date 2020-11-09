@@ -9,6 +9,7 @@ openssh
 pavucontrol
 picom
 reflector
+networkmanager
 scrot
 shuffle
 sxiv
@@ -18,6 +19,7 @@ xorg-xrandr
 xorg-xinit
 xorg-xsetroot
 zsh
+
 # yay
 robo3t-bin
 
