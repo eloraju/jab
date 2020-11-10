@@ -136,12 +136,12 @@ function main() {
     
 
     echo "Checking for internet connection..."
-    if [[ $jab_online -ne 0 ]]; then
+    if [ $jab_online -ne 0 ]; then
         echo "Couldn't connect to network. Maybe try again in a spiff?"
         exit 1
     fi
 
-    if [[ $jab_efi -eq 0 ]]; then
+    if [ $jab_efi -eq 0 ]; then
         formatEfi
     else
         formatBios
