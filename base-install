@@ -9,7 +9,6 @@ function checkInternet() {
     ping google.com -c 1 1>/dev/null 2>&1
 
     if [[ $? ]]; then
-        echo "Couldn't connect to network. Maybe try again in a spiff?"
         echo 1
     fi
 
@@ -138,7 +137,8 @@ function main() {
 
     echo "Checking for internet connection..."
     if [[ $jab_online -ne 0 ]]; then
-        exit 1:wipefs
+        echo "Couldn't connect to network. Maybe try again in a spiff?"
+        exit 1
     fi
 
     if [[ $jab_efi -eq 0 ]]; then
