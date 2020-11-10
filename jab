@@ -1,50 +1,159 @@
 #!/bin/sh
-### JAB - Juusos Arch Bootstrapper
-### Order of operations
-# 1. Enable multilib
-# 1. Run pacman -S
-# 2. Generate user 
-# 3. Do some config stuff
-# 4. Pull config files down
-# 5. Install yay and yay packages
-# 6. Pull wallpapers & scripts
-# 7. Pull work stuff
-
-USERNAME=$1
-
-# Enables multilib (for steam 'n stuff)
-enablePacmanMultilib() {
-   sed -i "/\[multilib\]/, /Include/"'s/^#//' /etc/pacman.conf
-   # And add some bling to pacman :)
-   sed '/#Verbose/a ILoveCandy\nColor' pacman.conf
+function checkEfi() {
+    ls /sys/firmware/efi/efivars 1>/dev/null 2>&1
+    echo $?
 }
 
-
-# Create a new user. This is the only param provided for the whole program 🤷
-#generateUser() {
-#    useradd -m -G wheel docker $1
-#    UHOME=/home/$1
-#}
-
-
-# Enable and start all kinds of services
-enableServices() {
-    systemctl enable --now docker systemd-networkd systemd-resolved
+# Check internet connection
+function checkInternet() {
+    ping google.com -c 1 1>/dev/null 2>&1
+    echo $?
 }
 
-# Pull stuff
+# Create partitions
+function formatEfi() {
+    partNum=1
+    echo "Formatting $jab_drive"
 
-# Install yay and yay packages
-installYayAndPackages() {
-    cd /tmp
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    sudo -u juuso makepkg -si
-    # Check that yay is working
-    (yay -Q >> /dev/null && yay -S $(grep -vE '^#|^$'./yay-pkgs)) || error "yay didn't install correctly"
+    previousSwap=$(swapon -s | awk -F' ' '/\/dev/ {print $1}')
+    if [ -n $previousSwap ]; then
+        swapoff $previousSwap 1>/dev/null 2>1&
+    fi
+
+    wipefs $jab_drive 1>/dev/null 2>&1
+    sfdisk --delete $jab_drive 1>/dev/null 2>&1
+    # Create boot partition
+    echo "    Creating boot partition"
+    echo ',512M,U' | sfdisk $jab_drive -X gpt 1>/dev/null 2>&1
+    yes | mkfs.fat -F32 -n BOOT $jab_drive"1" 1>/dev/null 2>&1
+    ((partNum=partNum+1))
+
+    # Check and create swap partition
+    if [ $jab_swap -eq 0 ]; then
+        echo "    Creating swap partition"
+        echo ", $jab_swap_s, S" | sfdisk $jab_drive -a 1>/dev/null 2>&1
+        mkswap -L SWAP $jab_drive"2" 1>/dev/null 2>&1
+        ((partNum=partNum+1))
+    fi
+
+    # Check and create root partition
+    if [ $jab_home_part -eq 0 ]; then
+        echo "    Creating root partition"
+        echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
+        yes | mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
+        ((partNum=partNum+1))
+
+        echo "    Creating home partition"
+        echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
+        yes | mkfs.ext4 -L HOME "$jab_drive$partNum" 1>/dev/null 2>&1
+        homePart=$jab_drive$partNum
+
+    else
+        echo "    Creating root partition"
+        echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
+        yes | mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
+        homePart=$jab_drive$partNum
+    fi
+
+
+    # Create all directories and mount the partitions
+    mountPartitions
 }
 
+function formatBios() {
+    # TODO: Gather enough motivation to actually do this
+    echo "BIOS implementation not completed yet"
+}
 
+function mountPartitions() {
+    # TODO: Problems during testing --> The partitions might be mounted from previous attempt...
+    # Not a feasable situtation in real life though...
+    # For some reason there has to be a small delay before
+    # mounting the drives. Otherwise they won't be visible
+    # in /dev/disk/by-label. Go figure 🤷
+    sleep 3
+    echo "Mounting partitions"
+    echo "    Mounting root"
+    mount /dev/disk/by-label/ROOT /mnt
 
+    echo "    Mounting boot"
+    [ -d /mnt/boot ] || mkdir /mnt/boot 1>/dev/null 2>&1
+    mount /dev/disk/by-label/BOOT /mnt/boot
 
+    if [ $jab_swap -eq 0 ]; then
+        echo "    Turning swap on"
+        swapon /dev/disk/by-label/SWAP 1>/dev/null 2>&1
+    fi
 
+    if [ $jab_home_part -eq 0 ]; then
+        echo "    Mounting home"
+        mkdir /mnt/home
+        mount /dev/disk/by-label/HOME /mnt/home
+    fi
+}
+
+function updateMirrors() {
+    echo "Installing helper tools"
+    pacman -Syq reflector --noconfirm 1>/dev/null 2>&1
+    echo "    Setting mirrors. This might take a couple of minutes..."
+    reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+    echo "    Mirros ready"
+}
+
+function installArch() {
+    echo "Installing base system"
+    if [ ! -f jab.pkgs ]; then
+        echo "ERROR!!! No jab.pkgs present"
+        exit 4
+    fi
+    pacstrap /mnt $(sed -e 's/\n/ /g' jab.pkgs)
+    if [ ! $? ]; then
+        echo "Error during pacstrap..."
+        exit 5
+    fi
+    
+    echo "    Generating fstab"
+    genfstab -U /mnt >> /mnt/etc/fstab
+}
+
+function main() {
+    #loadkeys fi
+    #timedatectl set-ntp true
+    
+    if [ -f './jab.conf' ]; then source ./jab.conf; fi
+    
+    [ -z $jab_drive ] && export jab_drive="/dev/sda"
+    [ -z $jab_swap ] && export jab_swap=0
+    [ -z $jab_swap_s ] && export jab_swap_s=4G
+    [ -z $jab_home_part ] && export jab_home_part=1
+    [ -z $jab_root_s ] && export jab_root_s=40G
+    [ -z $jab_efi ] && export jab_efi=$(checkEfi)
+    [ -z $jab_online ] && export jab_online=$(checkInternet)
+    
+    # Configs for the 
+    [ -z $jab_locale ] && export jab_locale="en_GB.UTF-8"
+    [ -z $jab_tz ] && export jab_tz="Europe/Helsinki"
+    [ -z $jab_keyboard ] && export jab_keyboard="fi"
+    [ -z $jab_hostname ] && export jab_hostname="arch"
+    [ -z $jab_username ] && export jab_username="archer"
+    [ -z $jab_password ] && export jab_password="change_me!"
+    
+
+    echo "Checking for internet connection..."
+    if [ $jab_online -ne 0 ]; then
+        echo "Couldn't connect to network. Maybe try again in a spiff?"
+        exit 1
+    fi
+
+    if [ $jab_efi -eq 0 ]; then
+        formatEfi
+    else
+        formatBios
+        exit 2
+    fi
+
+    updateMirrors
+    installArch
+}
+
+main $@
