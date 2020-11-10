@@ -25,7 +25,7 @@ function formatEfi() {
     # Create boot partition
     echo "    Creating boot partition"
     echo ',512M,U' | sfdisk $jab_drive -X gpt 1>/dev/null 2>&1
-    yes | mkfs.fat -F32 -n BOOT /dev/sda1 1>/dev/null 2>&1
+    yes | mkfs.fat -F32 -n BOOT $jab_drive"1" 1>/dev/null 2>&1
     ((partNum=partNum+1))
 
     # Check and create swap partition
