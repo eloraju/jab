@@ -183,6 +183,8 @@ function main() {
 
     updateMirrors
     installArch
+    chrootConfig
+    installGrub
 }
 
 main $@
