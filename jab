@@ -60,10 +60,13 @@ function formatEfi() {
     mountPartitions
 }
 
+# This needs to be a script of it's own
 function chrootConfig() {
     arch-chroot /mnt
     ln -sf /usr/share/zoneinfo/$jab_tz
     hwclock --systohc
+
+    # locale-gen call is missing
     
     echo "KEYMAP=$jab_keyboard" > /etc/vconsole.conf
     echo "LANG=$jab_locale" > /etc/locale.conf
