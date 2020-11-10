@@ -60,6 +60,34 @@ function formatEfi() {
     mountPartitions
 }
 
+function chrootConfig() {
+    arch-chroot /mnt
+    ln -sf /usr/share/zoneinfo/$jab_tz
+    hwclock --systohc
+    
+    echo "KEYMAP=$jab_keyboard" > /etc/vconsole.conf
+    echo "LANG=$jab_locale" > /etc/locale.conf
+    echo $jab_hostname > /etc/hostname
+    cat <<-EOF > /etc/hosts
+    127.0.0.1   localhost
+    ::1   localhost
+    127.0.1.1   $jab_hostname.localdomain $jab_hostname
+EOF
+    mkinitcpio -P
+    groups="wheel,libvirt,kvm,docker"
+
+    useradd --create-home -G $groups -s /bin/$jab_shell $jab_username 
+
+    echo "root:$jab_password" | chpasswd
+    echo "$jab_username:$jab_password" | chpasswd
+
+}
+
+function installGurb() {
+    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=JAB-GRUB
+    grub-mkconfig -o /boot/grub/grub.cfg
+}
+
 function formatBios() {
     # TODO: Gather enough motivation to actually do this
     echo "BIOS implementation not completed yet"
@@ -137,6 +165,7 @@ function main() {
     [ -z $jab_hostname ] && export jab_hostname="arch"
     [ -z $jab_username ] && export jab_username="archer"
     [ -z $jab_password ] && export jab_password="change_me!"
+    [ -z $jab_shell ] && export jab_password="zsh"
     
 
     echo "Checking for internet connection..."
