@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo Downloading jab script and config file
+curl -o jab run.eloraju.xyz/jab/jab 1>/dev/null 2>&1
+echo 1/3
+curl -o jab.conf run.eloraju.xyz/jab/conf 1>/dev/null 2>&1
+echo 2/3
+curl -o pkgs run.eloraju.xyz/jab/pkgs 1>/dev/null 2>&1
+echo Done
+
+echo Tweak the jab.conf file to suit your needs
+echo Then run sh jab ./config to start the fun
