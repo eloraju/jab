@@ -22,3 +22,7 @@ zsh
 virt-manager
 libvirt
 qemu
+edtables
+dnsmasq
+edk2-ovmf
+openbsd-netcat

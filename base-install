@@ -132,6 +132,8 @@ function main() {
     [ -z $jab_tz ] && export jab_tz="Europe/Helsinki"
     [ -z $jab_keyboard ] && export jab_keyboard="fi"
     [ -z $jab_hostname ] && export jab_hostname="arch"
+    [ -z $jab_username ] && export jab_username="archer"
+    [ -z $jab_password ] && export jab_password="change me!"
     
 
     echo "Checking for internet connection..."
@@ -139,16 +141,15 @@ function main() {
         exit 1
     fi
 
-    #if [[ $jab_efi -eq 0 ]]; then
-    #    formatEfi
-    #else
-    #    formatBios
-    #    exit 2
-    #fi
+    if [[ $jab_efi -eq 0 ]]; then
+        formatEfi
+    else
+        formatBios
+        exit 2
+    fi
 
-    formatEfi
-    updateMirrors
-    installArch
+    #updateMirrors
+    #installArch
 }
 
 main $@
