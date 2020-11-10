@@ -7,12 +7,7 @@ function checkEfi() {
 # Check internet connection
 function checkInternet() {
     ping google.com -c 1 1>/dev/null 2>&1
-
-    if [[ $? ]]; then
-        echo 1
-    fi
-
-    echo 0
+    echo $?
 }
 
 # Create partitions
@@ -21,7 +16,7 @@ function formatEfi() {
     echo "    Formatting $jab_drive"
 
     previousSwap=$(swapon -s | awk -F' ' '/\/dev/ {print $1}')
-    if [[ -n $previousSwap ]]; then
+    if [ -n $previousSwap ]; then
         swapoff $previousSwap 1>/dev/null 2>1&
     fi
 
@@ -34,7 +29,7 @@ function formatEfi() {
     ((partNum=partNum+1))
 
     # Check and create swap partition
-    if [[ $jab_swap -eq 0 ]]; then
+    if [ $jab_swap -eq 0 ]; then
         echo "    Creating swap partition"
         echo ", $jab_swap_s, S" | sfdisk $jab_drive -a 1>/dev/null 2>&1
         mkswap -L SWAP $jab_drive"2" 1>/dev/null 2>&1
@@ -42,7 +37,7 @@ function formatEfi() {
     fi
 
     # Check and create root partition
-    if [[ $jab_home_part -eq 0 ]]; then
+    if [ $jab_home_part -eq 0 ]; then
         echo "    Creating root partition"
         echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
         yes | mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
@@ -82,15 +77,15 @@ function mountPartitions() {
     mount /dev/disk/by-label/ROOT /mnt
 
     echo "    Mounting boot"
-    [[ -d /mnt/boot ]] || mkdir /mnt/boot 1>/dev/null 2>&1
+    [ -d /mnt/boot ] || mkdir /mnt/boot 1>/dev/null 2>&1
     mount /dev/disk/by-label/BOOT /mnt/boot
 
-    if [[ $jab_swap -eq 0 ]]; then
+    if [ $jab_swap -eq 0 ]; then
         echo "    Turning swap on"
         swapon /dev/disk/by-label/SWAP 1>/dev/null 2>&1
     fi
 
-    if [[ $jab_home_part -eq 0 ]]; then
+    if [ $jab_home_part -eq 0 ]; then
         echo "    Mounting home"
         mkdir /mnt/home
         mount /dev/disk/by-label/HOME /mnt/home
@@ -115,24 +110,23 @@ function main() {
     #loadkeys fi
     #timedatectl set-ntp true
     
-    if [[ -f $1 ]]; then source $1; fi
+    if [ -f $1 ]; then source $1; fi
     
-    [[ -z $jab_drive ]] && export jab_drive="/dev/sda"
-    [[ -z $jab_swap ]] && export jab_swap=0
-    [[ -z $jab_swap_s ]] && export jab_swap_s=4G
-    [[ -z $jab_home_part ]] && export jab_home_part=1
-    [[ -z $jab_root_s ]] && export jab_root_s=40G
-    [[ -z $jab_efi ]] && export jab_efi=$(checkEfi)
-    [[ -z $jab_online ]] && export jab_online=$(checkInternet)
-    [[ -z $jab_version ]] && export jab_version="arch"
+    [ -z $jab_drive ] && export jab_drive="/dev/sda"
+    [ -z $jab_swap ] && export jab_swap=0
+    [ -z $jab_swap_s ] && export jab_swap_s=4G
+    [ -z $jab_home_part ] && export jab_home_part=1
+    [ -z $jab_root_s ] && export jab_root_s=40G
+    [ -z $jab_efi ] && export jab_efi=$(checkEfi)
+    [ -z $jab_online ] && export jab_online=$(checkInternet)
     
     # Configs for the 
-    [[ -z $jab_locale ]] && export jab_locale="en_GB.UTF-8"
-    [[ -z $jab_tz ]] && export jab_tz="Europe/Helsinki"
-    [[ -z $jab_keyboard ]] && export jab_keyboard="fi"
-    [[ -z $jab_hostname ]] && export jab_hostname="arch"
-    [[ -z $jab_username ]] && export jab_username="archer"
-    [[ -z $jab_password ]] && export jab_password="change me!"
+    [ -z $jab_locale ] && export jab_locale="en_GB.UTF-8"
+    [ -z $jab_tz ] && export jab_tz="Europe/Helsinki"
+    [ -z $jab_keyboard ] && export jab_keyboard="fi"
+    [ -z $jab_hostname ] && export jab_hostname="arch"
+    [ -z $jab_username ] && export jab_username="archer"
+    [ -z $jab_password ] && export jab_password="change me!"
     
 
     echo "Checking for internet connection..."
