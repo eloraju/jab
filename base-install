@@ -103,6 +103,7 @@ function updateMirrors() {
 function installArch() {
     echo "Installing base system"
     pacstrap /mnt base base-devel linux linux-firmware git curl neovim zsh networkmanager
+    echo "    Generating fstab"
     genfstab -U /mnt >> /mnt/etc/fstab
 }
 
@@ -126,7 +127,7 @@ function main() {
     [ -z $jab_keyboard ] && export jab_keyboard="fi"
     [ -z $jab_hostname ] && export jab_hostname="arch"
     [ -z $jab_username ] && export jab_username="archer"
-    [ -z $jab_password ] && export jab_password="change me!"
+    [ -z $jab_password ] && export jab_password="change_me!"
     
 
     echo "Checking for internet connection..."
@@ -142,8 +143,8 @@ function main() {
         exit 2
     fi
 
-    updateMirrors
-    installArch
+    #updateMirrors
+    #installArch
 }
 
 main $@
