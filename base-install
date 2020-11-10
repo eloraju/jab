@@ -13,7 +13,7 @@ function checkInternet() {
 # Create partitions
 function formatEfi() {
     partNum=1
-    echo "    Formatting $jab_drive"
+    echo "Formatting $jab_drive"
 
     previousSwap=$(swapon -s | awk -F' ' '/\/dev/ {print $1}')
     if [ -n $previousSwap ]; then
@@ -102,7 +102,11 @@ function updateMirrors() {
 
 function installArch() {
     echo "Installing base system"
-    pacstrap /mnt base base-devel linux linux-firmware git curl neovim zsh networkmanager
+    if [ ! -f jab.pkgs ]; then
+        echo "ERROR!!! No jab.pkgs present"
+        exit 4
+    fi
+    pacstrap /mnt $(sed -e 's/\n/ /g' jab.pkgs)
     echo "    Generating fstab"
     genfstab -U /mnt >> /mnt/etc/fstab
 }
@@ -143,8 +147,8 @@ function main() {
         exit 2
     fi
 
-    #updateMirrors
-    #installArch
+    updateMirrors
+    installArch
 }
 
 main $@
