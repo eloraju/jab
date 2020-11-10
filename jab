@@ -182,12 +182,28 @@ function main() {
     fi
 
     updateMirrors
-    ([ $? ] || exit 6)
+    if [ ! $? ]; then
+        echo "Error updating mirrors"
+        exit 6
+    fi
+    
     installArch
-    ([ $? ] || exit 7)
+    if [ ! $? ]; then
+        echo "Error during pacstarp"
+        exit 7
+    fi
+    
     chrootConfig
-    ([ $? ] || exit 8)
+    if [ ! $? ]; then
+        echo "Error during chroot"
+        exit 8
+    fi
+    
     installGrub
+    if [ ! $? ]; then
+        echo "Error while installing grub"
+        exit 9
+    fi
 }
 
 main $@
