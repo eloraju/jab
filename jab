@@ -182,8 +182,11 @@ function main() {
     fi
 
     updateMirrors
+    ([ $? ] || exit 6)
     installArch
+    ([ $? ] || exit 7)
     chrootConfig
+    ([ $? ] || exit 8)
     installGrub
 }
 
