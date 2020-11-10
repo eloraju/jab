@@ -142,8 +142,8 @@ function main() {
         exit 2
     fi
 
-    #updateMirrors
-    #installArch
+    updateMirrors
+    installArch
 }
 
 main $@
