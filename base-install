@@ -107,6 +107,11 @@ function installArch() {
         exit 4
     fi
     pacstrap /mnt $(sed -e 's/\n/ /g' jab.pkgs)
+    if [ ! $? ]; then
+        echo "Error during pacstrap..."
+        exit 5
+    fi
+    
     echo "    Generating fstab"
     genfstab -U /mnt >> /mnt/etc/fstab
 }
