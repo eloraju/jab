@@ -272,9 +272,13 @@ mount /dev/sda1 /mnt/boot
 ```
 
 ## Set pacman mirrors
+
+### Setting mirror manually
+
 You can use your favourite text editor to move the mirrors physically closest to
 you at the top the file at `/etc/pacman.d/mirrorlist` or you can use this little
-snippet to move certain lines to the top
+snippet to move certain lines to the top. __Beware!__ This will overwrite the
+default mirrorlist file, so if you mess up, you'll be left with an empty file.
 
 ```sh
 # Finland is the closest to me so I'll use that
@@ -284,4 +288,10 @@ LIST=/etc/pacman.d/mirrorlist
 cp /tmp/list $LIST
 ```
 
-#### TODO: Creating variables for partitions (for scripts)
+### Setting mirrors using `reflector`
+
+Alternatively you can install a package to pick the mirrors for you. Just run
+`pacman -S reflector` and then `reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist`.
+This will pick 10 most recently updated mirrors and sort them from fastest to slowest. You can also
+use country names as arguments with `--Finland`. If provided, they are used to filter the mirrors. __Beware!__ If you
+there are no mirrors in the country you provide, you'll be left with an empty mirrorlist.
