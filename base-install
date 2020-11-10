@@ -83,7 +83,7 @@ function mountPartitions() {
     mount /dev/disk/by-label/ROOT /mnt
 
     echo "    Mounting boot"
-    mkdir /mnt/boot
+    mkdir /mnt/boot 1>/dev/null 2>&1
     mount /dev/disk/by-label/BOOT /mnt/boot
 
     if [ $jab_swap -eq 0 ]; then
