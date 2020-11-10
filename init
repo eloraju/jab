@@ -11,7 +11,5 @@ echo -e "* jab.pkgs\t- All the packages that are going to get installed along th
 echo -e "\t\t  You can add or remove stuff from here as much as you like. It's your system :) \n"
 
 echo Tweak the jab.conf file to suit your needs
-echo Then run 
-echo sh jab ./config 
-echo to start the fun
-echo -e "\n See you on the other side o/"
+echo Then run "sh jab ./config" to start the fun
+echo -e "\nSee you on the other side o/"
