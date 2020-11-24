@@ -4,7 +4,7 @@ echo -e "\nDownloading scripts and config files...\n"
 curl -o jab.sh run.eloraju.xyz/jab/jab 1>/dev/null 2>&1
 curl -o jab.conf run.eloraju.xyz/jab/conf 1>/dev/null 2>&1
 curl -o jab.pkgs run.eloraju.xyz/jab/pkgs 1>/dev/null 2>&1
-curl -o jab-chroot.sh run.eloraju.xyz/jab/jab-chroot.sh 1>/dev/null 2>&1
+curl -o jab-chroot.sh run.eloraju.xyz/jab/chroot 1>/dev/null 2>&1
 echo -e "Downloaded:\n"
 echo -e "* jab.sh\t- This is the script you will eventually run. You should check this out to see what it does.\n"
 echo -e "* jab.conf\t- Config file that exports all the variables used with the installation script. Change this to suit your needs\n"
