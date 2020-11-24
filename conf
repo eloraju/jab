@@ -45,3 +45,6 @@ export jab_password="change_me!"
 # Which what shell to use as default
 # bash, zsh and fish are all installed
 export jab_shell="zsh"
+
+# Whether to install yay or not
+export jab_install_yay=0
