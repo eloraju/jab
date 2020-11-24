@@ -140,13 +140,14 @@ function main() {
     [ -z $jab_efi ] && export jab_efi=$(checkEfi)
     [ -z $jab_online ] && export jab_online=$(checkInternet)
     
-    [ -z $jab_locale ] && export jab_locale="en_GB.UTF-8"
+    [ -z "$jab_locale" ] && export jab_locale="en_GB.UTF-8 UTF-8\nfi_FI.UTF-8 UTF-8"
+    [ -z "$jab_lang" ] && export jab_lang="en_GB.UTF-8 UTF-8"
     [ -z $jab_tz ] && export jab_tz="Europe/Helsinki"
     [ -z $jab_keyboard ] && export jab_keyboard="fi"
     [ -z $jab_hostname ] && export jab_hostname="arch"
     [ -z $jab_username ] && export jab_username="archer"
-    [ -z $jab_password ] && export jab_password="change_me!"
-    [ -z $jab_shell ] && export jab_password="zsh"
+    [ -z $jab_password ] && export jab_password="toor"
+    [ -z $jab_shell ] && export jab_shell="zsh"
     
 
     echo "Checking for internet connection..."

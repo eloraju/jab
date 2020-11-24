@@ -43,7 +43,7 @@ export jab_hostname="arch"
 export jab_username="archer"
 
 # Password for the user and root user
-export jab_password="change_me!"
+export jab_password="toor"
 
 # Which what shell to use as default
 # bash, zsh and fish are all installed
