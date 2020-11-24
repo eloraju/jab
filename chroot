@@ -27,10 +27,4 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 systemctl enable docker NetworkManager
 
-cat $jab_password | su $jab_username 
-cd
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-cd ..
-rm -rf yay
+su $jab_username -c "cd; git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si && cd .. && rm -rf yay && exit"
