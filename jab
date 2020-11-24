@@ -62,33 +62,10 @@ function formatEfi() {
 
 # This needs to be a script of it's own
 function chrootConfig() {
+    cp jab.conf /mnt
+    cp jab-chroot /mnt
     arch-chroot /mnt
-    ln -sf /usr/share/zoneinfo/$jab_tz
-    hwclock --systohc
 
-    # locale-gen call is missing
-    
-    echo "KEYMAP=$jab_keyboard" > /etc/vconsole.conf
-    echo "LANG=$jab_locale" > /etc/locale.conf
-    echo $jab_hostname > /etc/hostname
-    cat <<-EOF > /etc/hosts
-    127.0.0.1   localhost
-    ::1   localhost
-    127.0.1.1   $jab_hostname.localdomain $jab_hostname
-EOF
-    mkinitcpio -P
-    groups="wheel,libvirt,kvm,docker"
-
-    useradd --create-home -G $groups -s /bin/$jab_shell $jab_username 
-
-    echo "root:$jab_password" | chpasswd
-    echo "$jab_username:$jab_password" | chpasswd
-
-}
-
-function installGurb() {
-    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=JAB-GRUB
-    grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 function formatBios() {
@@ -124,11 +101,8 @@ function mountPartitions() {
 }
 
 function updateMirrors() {
-    echo "Installing helper tools"
-    pacman -Syq reflector --noconfirm 1>/dev/null 2>&1
-    echo "    Setting mirrors. This might take a couple of minutes..."
+    echo "Setting mirrors. This might take a couple of minutes..."
     reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-    echo "    Mirros ready"
 }
 
 function installArch() {
