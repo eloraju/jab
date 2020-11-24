@@ -162,23 +162,23 @@ function main() {
         exit 2
     fi
 
-#    updateMirrors
-#    if [ ! $? ]; then
-#        echo "Error updating mirrors"
-#        exit 6
-#    fi
-#    
-#    installArch
-#    if [ ! $? ]; then
-#        echo "Error during pacstarp"
-#        exit 7
-#    fi
-#    
-#    chrootConfig
-#    if [ ! $? ]; then
-#        echo "Error during chroot"
-#        exit 8
-#    fi
+    updateMirrors
+    if [ ! $? ]; then
+        echo "Error updating mirrors"
+        exit 6
+    fi
+    
+    installArch
+    if [ ! $? ]; then
+        echo "Error during pacstarp"
+        exit 7
+    fi
+    
+    chrootConfig
+    if [ ! $? ]; then
+        echo "Error during chroot"
+        exit 8
+    fi
 }
 
 main $@
