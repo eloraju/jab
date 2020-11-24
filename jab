@@ -36,12 +36,16 @@ function formatEfi() {
         ((partNum=partNum+1))
     fi
 
+    sleep 1
+
     # Check and create root partition
     if [ $jab_home_part -eq 0 ]; then
         echo "    Creating root partition"
         echo ",$jab_root_s,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
         yes | mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
         ((partNum=partNum+1))
+
+    sleep 1
 
         echo "    Creating home partition"
         echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
@@ -55,6 +59,7 @@ function formatEfi() {
         homePart=$jab_drive$partNum
     fi
 
+    sleep 1
 
     # Create all directories and mount the partitions
     mountPartitions
