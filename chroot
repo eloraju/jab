@@ -1,3 +1,4 @@
+source /jab.conf
 ln -sf /usr/share/zoneinfo/$jab_tz
 hwclock --systohc
 

@@ -65,7 +65,7 @@ function chrootConfig() {
     cp jab.conf /mnt
     cp jab-chroot.sh /mnt
     echo "Executing arch-chroot"
-    arch-chroot /mnt $jab_shell && rm /mnt/jab.conf /mnt/jab-chroot.sh
+    arch-chroot /mnt $jab_shell jab-chroot.sh && rm /mnt/jab.conf /mnt/jab-chroot.sh
 
 }
 
