@@ -5,12 +5,22 @@ curl -o jab.sh run.eloraju.xyz/jab/jab 1>/dev/null 2>&1
 curl -o jab.conf run.eloraju.xyz/jab/conf 1>/dev/null 2>&1
 curl -o jab.pkgs run.eloraju.xyz/jab/pkgs 1>/dev/null 2>&1
 curl -o jab-chroot.sh run.eloraju.xyz/jab/chroot 1>/dev/null 2>&1
-echo -e "Downloaded:\n"
-echo -e "* jab.sh\t- This is the script you will eventually run. You should check this out to see what it does.\n"
-echo -e "* jab.conf\t- Config file that exports all the variables used with the installation script. Change this to suit your needs\n"
-echo -e "* jab.pkgs\t- All the packages that are going to get installed along the base system. "
-echo -e "\t\t  You can add or remove stuff from here as much as you like. It's your system :) \n"
+cat << EOF
+Downloaded:
+    * jab.sh            - This is the script you will eventually run. You should
+                          check this out to see what it does.
 
-echo Tweak the jab.conf file to suit your needs
-echo Then run \"sh jab.sh\"
-echo -e "\nSee you on the other side o/"
+    * jab-chroot.sh     - This script is run inside the newly installed system to
+                          set it up to be ready to use. Check it out
+
+    * jab.conf          - Config file that exports all the variables used with the
+                          installation script. Change this to suit your needs
+
+    * jab.pkgs          - All the packages that are going to get installed along
+                          the base system. You can add or remove stuff from here
+                          as much as you like. It's your system :)
+
+Tweak the jab.conf file to suit your needs
+Then run "sh jab.sh"
+See you on the other side o/
+EOF
