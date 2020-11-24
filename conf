@@ -25,7 +25,10 @@ export jab_online=0
 ## into a bootable state
 
 # Locale to use 
-export jab_locale="en_GB.UTF-8"
+export jab_locale="en_GB.UTF-8 UTF-8\nfi_FI.UTF-8 UTF-8"
+
+# Language to use
+export jab_lang="en_GB.UTF-8"
 
 # Timezone to use
 export jab_tz="Europe/Helsinki"
@@ -45,6 +48,3 @@ export jab_password="change_me!"
 # Which what shell to use as default
 # bash, zsh and fish are all installed
 export jab_shell="zsh"
-
-# Whether to install yay or not
-export jab_install_yay=0

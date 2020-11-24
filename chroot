@@ -7,7 +7,7 @@ echo $jab_locale >> /etc/locale.gen
 locale-gen
 
 echo "KEYMAP=$jab_keyboard" > /etc/vconsole.conf
-echo "LANG=$jab_locale" > /etc/locale.conf
+echo "LANG=$jab_lang" > /etc/locale.conf
 echo $jab_hostname > /etc/hostname
 cat <<-EOF > /etc/hosts
 127.0.0.1   localhost
@@ -27,5 +27,5 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 systemctl enable docker NetworkManager
 
-
-[ $jab_install_yay -eq 0 ] && su $jab_username -c "cd; git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si && cd .. && rm -rf yay && exit"
+echo "git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si && cd .. && rm -rf yay" > /home/$jab_username/install-yay.sh
+chmod $jab_username:$jab_username /home/$jab_username/install-yay.sh
