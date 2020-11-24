@@ -29,3 +29,6 @@ systemctl enable docker NetworkManager
 
 echo "git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si && cd .. && rm -rf yay" > /home/$jab_username/install-yay.sh
 chmod $jab_username:$jab_username /home/$jab_username/install-yay.sh
+# TODO: if we want to install yay and stuff, we need to enable
+# ALL=(ALL) NOPASSWD:ALL for fakeroot
+echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers

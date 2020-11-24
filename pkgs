@@ -5,16 +5,12 @@ base
 base-devel
 # Stuff that I use
 alacritty
-bash
 curl
 docker
 docker-compose
 dunst
 efibootmgr
 feh
-firefox
-fish
-go
 git
 grub
 mlocate
