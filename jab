@@ -63,8 +63,9 @@ function formatEfi() {
 # This needs to be a script of it's own
 function chrootConfig() {
     cp jab.conf /mnt
-    cp jab-chroot /mnt
-    arch-chroot /mnt
+    cp jab-chroot.sh /mnt
+    echo "Executing arch-chroot"
+    arch-chroot /mnt $jab_shell && rm /mnt/jab.conf /mnt/jab-chroot.sh
 
 }
 
@@ -111,7 +112,7 @@ function installArch() {
         echo "ERROR!!! No jab.pkgs present"
         exit 4
     fi
-    pacstrap /mnt $(sed -e 's/\n/ /g' jab.pkgs)
+    pacstrap /mnt $(sed -e 's/\n/ /g' jab.pkgs) $jab_shell
     if [ ! $? ]; then
         echo "Error during pacstrap..."
         exit 5

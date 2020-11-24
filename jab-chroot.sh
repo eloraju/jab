@@ -23,3 +23,11 @@ echo "$jab_username:$jab_password" | chpasswd
 
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=JAB-GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
+
+systemctl enable docker NetworkManager
+
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+cd ..
+rm -rf yay
