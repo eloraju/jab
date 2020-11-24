@@ -76,7 +76,6 @@ function formatBios() {
 
 function mountPartitions() {
     # TODO: Problems during testing --> The partitions might be mounted from previous attempt...
-    # Not a feasable situtation in real life though...
     # For some reason there has to be a small delay before
     # mounting the drives. Otherwise they won't be visible
     # in /dev/disk/by-label. Go figure 🤷
@@ -112,7 +111,7 @@ function installArch() {
         echo "ERROR!!! No jab.pkgs present"
         exit 4
     fi
-    pacstrap /mnt $(sed -e 's/\n/ /g' jab.pkgs) $jab_shell
+    sed '/#/d' jab.pkgs | xargs pacstrap /mnt $jab_shell
     if [ ! $? ]; then
         echo "Error during pacstrap..."
         exit 5
@@ -136,7 +135,6 @@ function main() {
     [ -z $jab_efi ] && export jab_efi=$(checkEfi)
     [ -z $jab_online ] && export jab_online=$(checkInternet)
     
-    # Configs for the 
     [ -z $jab_locale ] && export jab_locale="en_GB.UTF-8"
     [ -z $jab_tz ] && export jab_tz="Europe/Helsinki"
     [ -z $jab_keyboard ] && export jab_keyboard="fi"
@@ -175,12 +173,6 @@ function main() {
     if [ ! $? ]; then
         echo "Error during chroot"
         exit 8
-    fi
-    
-    installGrub
-    if [ ! $? ]; then
-        echo "Error while installing grub"
-        exit 9
     fi
 }
 

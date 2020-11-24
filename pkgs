@@ -1,26 +1,45 @@
+# Base system
+linux
+linux-firmware
+base
+base-devel
+# Stuff that I use
 alacritty
+bash
 curl
 docker
 docker-compose
 dunst
+efibootmgr
+feh
 firefox
 fish
 git
+grub
+mlocate
 neovim
+networkmanager
 openssh
 pavucontrol
 picom
+pulseaudio
+python
+python-pip
+qtile
 reflector
-networkmanager
+rofimoji
 scrot
 shuffle
 sxiv
+the_silver_searcher
 xclip
 xorg-server
-xorg-xrandr
 xorg-xinit
+xorg-xrandr
 xorg-xsetroot
 zsh
+zsh-syntax-highlighting
+# VM stuff
 virt-manager
 libvirt
 qemu
@@ -28,5 +47,3 @@ ebtables
 dnsmasq
 edk2-ovmf
 openbsd-netcat
-grub
-efibootmgr
