@@ -21,6 +21,7 @@ pavucontrol
 picom
 pulseaudio
 python
+libnotify
 python-pip
 qtile
 reflector
