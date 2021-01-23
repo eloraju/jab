@@ -132,6 +132,8 @@ function installArch() {
 }
 
 
+if [ -f './jab.conf' ]; then source ./jab.conf; fi
+
 [ -z $jab_drive ] && export jab_drive="/dev/sda"
 [ -z $jab_swap ] && export jab_swap=0
 [ -z $jab_swap_s ] && export jab_swap_s=4G
