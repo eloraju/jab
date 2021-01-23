@@ -17,6 +17,7 @@ mlocate
 neovim
 networkmanager
 openssh
+openconnect
 pavucontrol
 picom
 pulseaudio
@@ -25,6 +26,7 @@ libnotify
 python-pip
 qtile
 reflector
+rofi
 rofimoji
 scrot
 shuffle
@@ -35,6 +37,7 @@ xorg-server
 xorg-xinit
 xorg-xrandr
 xorg-xsetroot
+xorg-server-zephyr
 zsh
 zsh-syntax-highlighting
 # VM stuff
@@ -45,3 +48,23 @@ ebtables
 dnsmasq
 edk2-ovmf
 openbsd-netcat
+# ???
+amd-ucode
+arandr
+bluez
+bluez-utils
+blueman
+chromium
+ctags
+dragon-drag-and-drop
+fzf
+github-cli
+htop
+networkmanager-openconnect
+obs-studio
+starship
+thunar
+tldr++
+xbanish
+python-psutil
+python-iwlib
