@@ -68,6 +68,7 @@ function formatEfi() {
 # This needs to be a script of it's own
 function chrootConfig() {
     cp jab.conf /mnt
+    cp jab.pkgs /mnt
     cp jab-chroot.sh /mnt
     echo "Executing arch-chroot"
     arch-chroot /mnt $jab_shell jab-chroot.sh && rm /mnt/jab.conf /mnt/jab-chroot.sh
@@ -117,7 +118,7 @@ function installArch() {
         exit 4
     fi
 
-    pacstrap /mnt base base-devel linux linux-firmware $jab_shell
+    pacstrap /mnt base base-devel linux linux-firmware git neovim $jab_shell
     if [ ! $? ]; then
         echo "Error during pacstrap..."
         exit 5
@@ -130,60 +131,52 @@ function installArch() {
     cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 }
 
-function main() {
-    #loadkeys fi
-    #timedatectl set-ntp true
-    
-    if [ -f './jab.conf' ]; then source ./jab.conf; fi
-    
-    [ -z $jab_drive ] && export jab_drive="/dev/sda"
-    [ -z $jab_swap ] && export jab_swap=0
-    [ -z $jab_swap_s ] && export jab_swap_s=4G
-    [ -z $jab_home_part ] && export jab_home_part=1
-    [ -z $jab_root_s ] && export jab_root_s=40G
-    [ -z $jab_efi ] && export jab_efi=$(checkEfi)
-    [ -z $jab_online ] && export jab_online=$(checkInternet)
-    
-    [ -z "$jab_locale" ] && export jab_locale="en_GB.UTF-8 UTF-8\nfi_FI.UTF-8 UTF-8"
-    [ -z "$jab_lang" ] && export jab_lang="en_GB.UTF-8 UTF-8"
-    [ -z $jab_tz ] && export jab_tz="Europe/Helsinki"
-    [ -z $jab_keyboard ] && export jab_keyboard="fi"
-    [ -z $jab_hostname ] && export jab_hostname="arch"
-    [ -z $jab_username ] && export jab_username="archer"
-    [ -z $jab_password ] && export jab_password="toor"
-    [ -z $jab_shell ] && export jab_shell="zsh"
-    
 
-    echo "Checking for internet connection..."
-    if [ $jab_online -ne 0 ]; then
-        echo "Couldn't connect to network. Maybe try again in a spiff?"
-        exit 1
-    fi
+[ -z $jab_drive ] && export jab_drive="/dev/sda"
+[ -z $jab_swap ] && export jab_swap=0
+[ -z $jab_swap_s ] && export jab_swap_s=4G
+[ -z $jab_home_part ] && export jab_home_part=1
+[ -z $jab_root_s ] && export jab_root_s=40G
+[ -z $jab_efi ] && export jab_efi=$(checkEfi)
+[ -z $jab_online ] && export jab_online=$(checkInternet)
 
-    if [ $jab_efi -eq 0 ]; then
-        formatEfi
-    else
-        formatBios
-        exit 2
-    fi
+[ -z "$jab_locale" ] && export jab_locale="en_GB.UTF-8 UTF-8\nfi_FI.UTF-8 UTF-8"
+[ -z "$jab_lang" ] && export jab_lang="en_GB.UTF-8 UTF-8"
+[ -z $jab_tz ] && export jab_tz="Europe/Helsinki"
+[ -z $jab_keyboard ] && export jab_keyboard="fi"
+[ -z $jab_hostname ] && export jab_hostname="arch"
+[ -z $jab_username ] && export jab_username="archer"
+[ -z $jab_password ] && export jab_password="toor"
+[ -z $jab_shell ] && export jab_shell="zsh"
 
-    updateMirrors
-    if [ ! $? ]; then
-        echo "Error updating mirrors"
-        exit 6
-    fi
-    
-    installArch
-    if [ ! $? ]; then
-        echo "Error during pacstarp"
-        exit 7
-    fi
-    
-    chrootConfig
-    if [ ! $? ]; then
-        echo "Error during chroot"
-        exit 8
-    fi
-}
 
-main $@
+echo "Checking for internet connection..."
+if [ $jab_online -ne 0 ]; then
+    echo "Couldn't connect to network. Maybe try again in a spiff?"
+    exit 1
+fi
+
+if [ $jab_efi -eq 0 ]; then
+    formatEfi
+else
+    formatBios
+    exit 2
+fi
+
+updateMirrors
+if [ ! $? ]; then
+    echo "Error updating mirrors"
+    exit 6
+fi
+
+installArch
+if [ ! $? ]; then
+    echo "Error during pacstarp"
+    exit 7
+fi
+
+chrootConfig
+if [ ! $? ]; then
+    echo "Error during chroot"
+    exit 8
+fi
