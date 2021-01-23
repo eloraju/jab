@@ -21,19 +21,26 @@ useradd --create-home -G wheel -s /bin/$jab_shell $jab_username
 echo "root:$jab_password" | chpasswd
 echo "$jab_username:$jab_password" | chpasswd
 
+echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
+
+echo "%$jab_username ALL=(ALL) NOPASSWD: ALL #REMOVE" >> /etc/sudoers
+
 # Download yay install script and install packages
 echo "git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si && cd .. && rm -rf yay" > /home/$jab_username/install-yay.sh
+cp jab.pkgs /home/$jab_username/
 chown $jab_username:$jab_username /home/$jab_username/install-yay.sh
+chown $jab_username:$jab_username /home/$jab_username/jab.pkgs
 cd /home/$jab_username/
 su - $jab_username -c "sh install-yay.sh"
 su - $jab_username -c "sed '/#/d' jab.pkgs | xargs yay --noconfirm"
+
+sed '/#REMOVE/d' /etc/sudoers
+echo "%$jab_username ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/updatedb, /usr/bin/mount, /usr/bin/umount, /usr/bin/openconnect, /usr/bin/systemctl" >> /etc/sudoers
 
 systemctl enable docker NetworkManager
 groups="libvirt,kvm,docker"
 usermod -aG $groups $jab_username
 
-echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
-echo "%$jab_username ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/updatedb, /usr/bin/mount, /usr/bin/umount, /usr/bin/openconnect, /usr/bin/systemctl"
 
 # Last but not least. Install grub
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=JAB-GRUB
