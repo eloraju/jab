@@ -116,7 +116,8 @@ function installArch() {
         echo "ERROR!!! No jab.pkgs present"
         exit 4
     fi
-    sed '/#/d' jab.pkgs | xargs pacstrap /mnt $jab_shell
+
+    pacstrap /mnt base base-devel linux linux-firmware $jab_shell
     if [ ! $? ]; then
         echo "Error during pacstrap..."
         exit 5
@@ -124,6 +125,9 @@ function installArch() {
     
     echo "    Generating fstab"
     genfstab -U /mnt >> /mnt/etc/fstab
+
+    echo "    Setting mirrorlist"
+    cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 }
 
 function main() {

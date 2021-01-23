@@ -1,8 +1,7 @@
 source /jab.conf
-ln -sf /usr/share/zoneinfo/$jab_tz
+ln -sf /usr/share/zoneinfo/$jab_tz /etc/localtime
 hwclock --systohc
 
-# locale-gen call is missing
 echo $jab_locale >> /etc/locale.gen
 locale-gen
 
@@ -30,5 +29,7 @@ systemctl enable docker NetworkManager
 echo "git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si && cd .. && rm -rf yay" > /home/$jab_username/install-yay.sh
 chown $jab_username:$jab_username /home/$jab_username/install-yay.sh
 # TODO: if we want to install yay and stuff, we need to enable
-# ALL=(ALL) NOPASSWD:ALL for fakeroot
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
+
+# TODO: Install packages here...
+# sed '/#/d' jab.pkgs | xargs yay --noconfirm

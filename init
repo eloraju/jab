@@ -1,10 +1,10 @@
 #!/bin/sh
 
 echo -e "\nDownloading scripts and config files...\n"
-curl -o jab.sh jab.eloraju.xyz/jab 1>/dev/null 2>&1
-curl -o jab.conf jab.eloraju.xyz/conf 1>/dev/null 2>&1
-curl -o jab.pkgs jab.eloraju.xyz/pkgs 1>/dev/null 2>&1
-curl -o jab-chroot.sh jab.eloraju.xyz/chroot 1>/dev/null 2>&1
+curl -Lo jab.sh jab.eloraju.xyz/jab 1>/dev/null 2>&1
+curl -Lo jab.conf jab.eloraju.xyz/conf 1>/dev/null 2>&1
+curl -Lo jab.pkgs jab.eloraju.xyz/pkgs 1>/dev/null 2>&1
+curl -Lo jab-chroot.sh jab.eloraju.xyz/chroot 1>/dev/null 2>&1
 cat << EOF
 Downloaded:
     * jab.sh            - This is the script you will eventually run. You should
