@@ -20,8 +20,8 @@ function formatEfi() {
         swapoff $previousSwap 1>/dev/null 2>1&
     fi
 
-    wipefs $jab_drive 1>/dev/null 2>&1
     sfdisk --delete $jab_drive 1>/dev/null 2>&1
+    wipefs --all $jab_drive 1>/dev/null 2>&1
     # Create boot partition
     echo "    Creating boot partition"
     echo ',512M,U' | sfdisk $jab_drive -X gpt 1>/dev/null 2>&1
