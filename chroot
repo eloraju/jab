@@ -34,7 +34,7 @@ cd /home/$jab_username/
 su - $jab_username -c "sh install-yay.sh"
 su - $jab_username -c "sed '/#/d' jab.pkgs | xargs yay --noconfirm"
 
-sed '/#REMOVE/d' /etc/sudoers
+sed -i '/#REMOVE/d' /etc/sudoers
 echo "%$jab_username ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/updatedb, /usr/bin/mount, /usr/bin/umount, /usr/bin/openconnect, /usr/bin/systemctl" >> /etc/sudoers
 
 systemctl enable docker NetworkManager

@@ -118,7 +118,7 @@ function installArch() {
         exit 4
     fi
 
-    pacstrap /mnt base base-devel linux linux-firmware git neovim $jab_shell
+    pacstrap /mnt base base-devel linux linux-firmware git neovim go $jab_shell
     if [ ! $? ]; then
         echo "Error during pacstrap..."
         exit 5
