@@ -109,7 +109,7 @@ function installArch() {
         exit 5
     fi
     
-    sed -e '/\[options\]/a Color\nILoveCandy'
+    sed -ei '/\[options\]/a Color\nILoveCandy' /mnt/etc/pacman.conf
 
     echo "    Generating fstab"
     genfstab -U /mnt >> /mnt/etc/fstab
