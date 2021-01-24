@@ -42,3 +42,14 @@ export jab_password="toor"
 
 # Which what shell to use as default
 export jab_shell="zsh"
+
+# A URL to a post installation script that is run as
+# the newly generated user. This script will be executed with
+# 'sh < <(curl $jab_post_chroot_script_url)'.
+#
+# You can use either this or jab_post_chroot_script_file
+# to run a script after everythig else is installed
+
+#export jab_post_chroot_script_url="https://config.script.url"
+
+#export jab_post_chroot_script_file=path/to/file

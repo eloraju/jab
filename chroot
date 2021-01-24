@@ -45,3 +45,12 @@ usermod -aG $groups $jab_username
 # Last but not least. Install grub
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=JAB-GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
+
+# Now we can run the post install script (if there is one)
+if [[ -n $jab_post_chroot_script_url ]]; then
+    su - $jab_username -c "sh < <(curl -L $jab_post_chroot_script_url)"
+elif [[ -f /$jab_post_chroot_script_file ]]; then
+    cp /$jab_post_chroot_script_file /home/$jab_username/post-install
+    chown $jab_username:$jab_username /home/$jab_username/post-install
+    su - $jab_username -c "sh /home/$jab_username/post-install"
+fi

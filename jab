@@ -66,8 +66,8 @@ function chrootConfig() {
     cp jab.pkgs /mnt
     cp jab-chroot.sh /mnt
     
-    if [[ -f $jab_chroot_post_script ]]; then
-        cp $jab_chroot_post_script /mnt
+    if [[ -f $jab_post_chroot_script_file ]]; then
+        cp $jab_post_chroot_script_file /mnt
     fi
 
     echo "Executing arch-chroot"
