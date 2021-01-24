@@ -32,7 +32,7 @@ chown $jab_username:$jab_username /home/$jab_username/install-yay.sh
 chown $jab_username:$jab_username /home/$jab_username/jab.pkgs
 cd /home/$jab_username/
 su - $jab_username -c "sh install-yay.sh"
-su - $jab_username -c "sed '/#/d' jab.pkgs | xargs yay --noconfirm"
+su - $jab_username -c "sed '/#/d' jab.pkgs | xargs yay -Suyy --noconfirm --needed"
 
 sed -i '/#REMOVE/d' /etc/sudoers
 echo "%$jab_username ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/updatedb, /usr/bin/mount, /usr/bin/umount, /usr/bin/openconnect, /usr/bin/systemctl" >> /etc/sudoers
