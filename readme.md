@@ -16,3 +16,7 @@ boot it up and run `sh < <(curl https://jab.eloraju.xyz)`. This will run the `in
 script. Then make changes in the `jab.conf` and `jab.pkgs` files according to your
 likings. Once you're satisfied run `sh jab.sh`. Then just wait for the installation
 to finish.
+
+### License
+
+[MIT](https://gitlab.com/eloraju/jab/-/blob/master/LICENSE)
