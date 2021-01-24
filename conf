@@ -2,27 +2,22 @@
 export jab_drive="/dev/sda"
 
 # Do you want to create a swap partition?
-export jab_swap=0
+export jab_swap='true'
 
 # Swap partition size
 export jab_swap_s=16G
 
 # Do you want to create a home partition?
-export jab_home_part=1
+export jab_home_part='false'
 
 # Root partition size (only used when jab_home_part is set)
-export jab_root_s=0
+export jab_root_s=40G
 
 # Remove if you're unsure wether your running efi or bios system
-# The script will check
-export jab_efi=0
+export jab_efi='true'
 
 # The script will try to check for connection if this is unset
-export jab_online=0
-
-## The variables below are used
-## to configure the arch installation
-## into a bootable state
+export jab_online='true'
 
 # Locale to use 
 export jab_locale="en_GB.UTF-8 UTF-8\nfi_FI.UTF-8 UTF-8"
@@ -46,5 +41,4 @@ export jab_username="archer"
 export jab_password="toor"
 
 # Which what shell to use as default
-# bash, zsh and fish are all installed
 export jab_shell="zsh"
