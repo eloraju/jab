@@ -1,5 +1,5 @@
-mkdir -p ~/repos/{own, projects, clients, random}
-mkdir -p ~/Pictures/{screenshots, wallpapers}
+mkdir -p ~/repos/{own,projects,clients,random}
+mkdir -p ~/Pictures/{screenshots,wallpapers}
 mkdir ~/.dotfiles
 
 git clone --bare https://gitlab.com/eloraju/dotfiles.git ~/.dotfiles
