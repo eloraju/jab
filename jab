@@ -93,12 +93,12 @@ function mountPartitions() {
     [ -d /mnt/boot ] || mkdir /mnt/boot 1>/dev/null 2>&1
     mount /dev/disk/by-label/BOOT /mnt/boot
 
-    if [ $jab_swap -eq 0 ]; then
+    if [ $jab_swap = 'true' ]; then
         echo "    Turning swap on"
         swapon /dev/disk/by-label/SWAP 1>/dev/null 2>&1
     fi
 
-    if [ $jab_home_part -eq 0 ]; then
+    if [ $jab_home_part = 'true' ]; then
         echo "    Mounting home"
         mkdir /mnt/home
         mount /dev/disk/by-label/HOME /mnt/home
@@ -149,7 +149,7 @@ if [ -f './jab.conf' ]; then source ./jab.conf; fi
 
 
 echo "Checking for internet connection..."
-if [ "$jab_online" = 'true' ]; then
+if [ "$jab_online" = 'false' ]; then
     echo "Couldn't connect to network. Maybe try again in a spiff?"
     exit 1
 fi
