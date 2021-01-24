@@ -36,8 +36,6 @@ function formatEfi() {
         ((partNum=partNum+1))
     fi
 
-    sleep 1
-
     # Check and create root partition
     if [ $jab_home_part -eq 0 ]; then
         echo "    Creating root partition"
@@ -45,7 +43,6 @@ function formatEfi() {
         yes | mkfs.ext4 -L ROOT "$jab_drive$partNum" 1>/dev/null 2>&1
         ((partNum=partNum+1))
 
-    sleep 1
 
         echo "    Creating home partition"
         echo ",,L" | sfdisk $jab_drive -a 1>/dev/null 2>&1
@@ -59,8 +56,6 @@ function formatEfi() {
         homePart=$jab_drive$partNum
     fi
 
-    sleep 1
-
     # Create all directories and mount the partitions
     mountPartitions
 }
@@ -71,7 +66,7 @@ function chrootConfig() {
     cp jab.pkgs /mnt
     cp jab-chroot.sh /mnt
     echo "Executing arch-chroot"
-    arch-chroot /mnt $jab_shell jab-chroot.sh && rm /mnt/jab.conf /mnt/jab-chroot.sh
+    arch-chroot /mnt $jab_shell jab-chroot.sh && rm /mnt/jab.conf /mnt/jab-chroot.sh /mnt/jab.pkgs
 
 }
 
@@ -81,11 +76,6 @@ function formatBios() {
 }
 
 function mountPartitions() {
-    # TODO: Problems during testing --> The partitions might be mounted from previous attempt...
-    # For some reason there has to be a small delay before
-    # mounting the drives. Otherwise they won't be visible
-    # in /dev/disk/by-label. Go figure 🤷
-    sleep 3
     echo "Mounting partitions"
     echo "    Mounting root"
     mount /dev/disk/by-label/ROOT /mnt
@@ -113,17 +103,14 @@ function updateMirrors() {
 
 function installArch() {
     echo "Installing base system"
-    if [ ! -f jab.pkgs ]; then
-        echo "ERROR!!! No jab.pkgs present"
-        exit 4
-    fi
-
     pacstrap /mnt base base-devel linux linux-firmware git neovim go $jab_shell
     if [ ! $? ]; then
         echo "Error during pacstrap..."
         exit 5
     fi
     
+    sed -e '/\[options\]/a Color\nILoveCandy'
+
     echo "    Generating fstab"
     genfstab -U /mnt >> /mnt/etc/fstab
 
