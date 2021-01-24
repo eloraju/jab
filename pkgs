@@ -51,6 +51,9 @@ xorg-server
 xorg-xinit
 xorg-xrandr
 xorg-xsetroot
+xorg-xcalc
+xorg-xeyes
+xorg-xclock
 zsh
 zsh-syntax-highlighting
 # VM stuff
