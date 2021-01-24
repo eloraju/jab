@@ -1,0 +1,9 @@
+mkdir -p ~/repos/{own, projects, clients, random}
+mkdir -p ~/Pictures/{screenshots, wallpapers}
+mkdir ~/.dotfiles
+
+git clone --bare https://gitlab.com/eloraju/dotfiles.git ~/.dotfiles
+git clone https://gitlab.com/eloraju/wallpapers.git ~/Pictures/wallpapers
+git clone https://gitlab.com/eloraju/qtile.git ~/repos/projects/qtile
+git clone https://github.com/neovim/neovim ~/repos/projects/neovim
+git clone https://github.com/frenkel/timer-for-harvest.git ~/repos/projects/timer-for-harvest
