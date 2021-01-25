@@ -25,14 +25,14 @@ echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 
 echo "%$jab_username ALL=(ALL) NOPASSWD: ALL #REMOVE" >> /etc/sudoers
 
-# Download yay install script and install packages
-echo "git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si && cd .. && rm -rf yay" > /home/$jab_username/install-yay.sh
+# Download paru install script and install packages
+echo "git clone https://github.com/Morganamilo/paru && cd paru && makepkg -si --noconfirm --needed && cd .. && rm -rf paru" > /home/$jab_username/install-paru.sh
 cp jab.pkgs /home/$jab_username/
-chown $jab_username:$jab_username /home/$jab_username/install-yay.sh
+chown $jab_username:$jab_username /home/$jab_username/install-paru.sh
 chown $jab_username:$jab_username /home/$jab_username/jab.pkgs
 cd /home/$jab_username/
-su - $jab_username -c "sh install-yay.sh"
-su - $jab_username -c "sed '/#/d' jab.pkgs | xargs yay -Suyy --noconfirm --needed"
+su - $jab_username -c "sh install-paru.sh"
+su - $jab_username -c "sed '/#/d' jab.pkgs | xargs paru -Suyy --noconfirm --needed"
 
 sed -i '/#REMOVE/d' /etc/sudoers
 echo "%$jab_username ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/updatedb, /usr/bin/mount, /usr/bin/umount, /usr/bin/openconnect, /usr/bin/systemctl" >> /etc/sudoers
