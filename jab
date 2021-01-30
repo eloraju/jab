@@ -112,13 +112,14 @@ function updateMirrors() {
 
 function installArch() {
     echo "Installing base system"
-    pacstrap /mnt base base-devel linux linux-firmware git neovim go $jab_shell
+    pacstrap /mnt base base-devel linux linux-firmware git neovim $jab_shell
     if [ ! $? ]; then
         echo "Error during pacstrap..."
         exit 5
     fi
     
     sed -ei '/\[options\]/a Color\nILoveCandy' /mnt/etc/pacman.conf
+    sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
     echo "    Generating fstab"
     genfstab -U /mnt >> /mnt/etc/fstab
@@ -178,3 +179,12 @@ if [ ! $? ]; then
     echo "Error during chroot"
     exit 8
 fi
+
+cat << EOF
+All done!
+Now all that is left for you to do is to install
+video drivers once you login :)
+
+I'll make the script detect them automatically at some point
+but for now it's a manual process
+EOF
