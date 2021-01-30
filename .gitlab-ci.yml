@@ -2,7 +2,8 @@
 # see https://docs.gitlab.com/ee/ci/yaml/README.html for all available options
 
 
-deploy1:
-  stage: deploy
+Cave:
+  stage: Add remtoes
   script:
-    - git remote -v
+      - git remote add cave git@eloraju.xyz:/repos/jab.git
+      - git remote -v
