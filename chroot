@@ -26,7 +26,7 @@ echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 echo "%$jab_username ALL=(ALL) NOPASSWD: ALL #REMOVE" >> /etc/sudoers
 
 # Download paru install script and install packages
-echo "git clone https://github.com/Morganamilo/paru && cd paru && makepkg -si --noconfirm --needed && cd .. && rm -rf paru" > /home/$jab_username/install-paru.sh
+erch-cho "git clone https://aur.archlinux.org/paru.git && cd paru && makepkg -si --noconfirm --needed && cd .. && rm -rf paru" > /home/$jab_username/install-paru.sh
 cp jab.pkgs /home/$jab_username/
 chown $jab_username:$jab_username /home/$jab_username/install-paru.sh
 chown $jab_username:$jab_username /home/$jab_username/jab.pkgs
